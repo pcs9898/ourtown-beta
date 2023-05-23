@@ -1,9 +1,9 @@
--- Folder architect
+-- Folder structure design
 [x] pages, src-commons, src-components
 
--- Theme setting, styling Common Component
+-- Theme setting, Styling common components
 [x] theme
-[x] common components
+[x] common components(avatar, button, input)
 
 -- Combine Components
 [x] customTabs
