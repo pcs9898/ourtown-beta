@@ -40,7 +40,7 @@ export default function CustomModal({
           height={{
             base: "100vh",
           }}
-          borderRadius={{ base: "0px", md: "base" }}
+          borderRadius="0"
           maxWidth="32.3125rem"
           px="1rem"
           py="0.75rem"
@@ -50,7 +50,9 @@ export default function CustomModal({
           sx={{
             "@media (min-width: 518px)": {
               height: "auto",
+              maxHeight: "70%",
               my: "auto",
+              borderRadius: "base",
             },
           }}
         >
@@ -65,7 +67,7 @@ export default function CustomModal({
               />
 
               <Heading
-                fontSize="1.125rem"
+                fontSize="1.25rem"
                 textAlign="center"
                 position="absolute"
                 width="100%"
@@ -80,7 +82,21 @@ export default function CustomModal({
             </Flex>
           </ModalHeader>
 
-          <ModalBody marginTop="0.75rem" p="0">
+          <ModalBody
+            marginTop="0.75rem"
+            p="0"
+            overflowY="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                borderRadius: "50px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                borderRadius: "50px",
+              },
+            }}
+          >
             {children}
           </ModalBody>
         </ModalContent>

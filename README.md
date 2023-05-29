@@ -23,11 +23,12 @@
 [x] popover
 
 -- Layout
-[ ] header(mobile, pc)
-[ ] main(mobile, pc)
-[ ] nav(pc)
-[ ] section(mobile, pc)
-[ ] footer(mobile)
+[x] layouts(mobile, pc)
+[x] header(mobile, pc)
+[x] main(mobile, pc)
+[x] nav(pc)
+[x] section(mobile, pc)
+[x] footer(mobile)
 
 -- Utils
 [ ] timeCount

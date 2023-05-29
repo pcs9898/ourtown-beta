@@ -14,6 +14,7 @@ import {
   Image,
   Input,
   Select,
+  Stack,
   Text,
   useColorMode,
 } from "@chakra-ui/react";
@@ -32,6 +33,8 @@ import Profile from "@/src/components/commons/combine/profile";
 import CustomTabs from "@/src/components/commons/combine/customTabs";
 import CustomModal from "@/src/components/commons/combine/customModal";
 import CustomPopover from "@/src/components/commons/combine/customPopover";
+import Header from "@/src/components/commons/layouts/header";
+import { NotificationsNone } from "@mui/icons-material";
 const inter = Inter({ subsets: ["latin"] });
 
 const exam = {
@@ -67,27 +70,24 @@ const data2 = {
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <>
-      <CommentItem commentItemData={exam} />
+    <CustomTabs
+      tabList={[
+        "posts",
+        "Liked",
+        "interested",
+        "interested",
+        "interested",
+        "interested",
+        "posts",
 
-      <PostDetail postDetailData={data} />
-
-      <Profile profileData={data2} />
-      <CustomTabs
-        tabList={[
-          "posts",
-          "Liked",
-          "interested",
-          "interested",
-          "interested",
-          "interested",
-          "interested",
-        ]}
-      />
-      <CustomModal buttonContent="post" modalHeaderTitle="Hello's blog">
-        <PostDetail postDetailData={data} />
-      </CustomModal>
-      <CustomPopover isNotifications={true} />
-    </>
+        "interested",
+      ]}
+    >
+      <Stack gap="0.5rem" marginTop="2px">
+        {Array.from({ length: 9 }, (_, index) => (
+          <PostDetail key={index} postDetailData={data} />
+        ))}
+      </Stack>
+    </CustomTabs>
   );
 }

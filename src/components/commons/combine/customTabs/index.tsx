@@ -1,10 +1,24 @@
-import { Tab, TabList, Tabs } from "@chakra-ui/react";
+import {
+  Box,
+  Tab,
+  TabList,
+  Tabs,
+  useBreakpointValue,
+  useTheme,
+} from "@chakra-ui/react";
+
+import { ReactNode } from "react";
 
 interface ICustomTabsProps {
   tabList: string[];
+  children: ReactNode;
 }
 
-export default function CustomTabs({ tabList }: ICustomTabsProps) {
+export default function CustomTabs({ tabList, children }: ICustomTabsProps) {
+  const pxValue = useBreakpointValue({
+    base: 0,
+    "32.3125rem": "0.1rem",
+  });
   const handleClickTab = (tab: string) => {
     console.log(tab);
     // 쿼리로 밑에 게시글 리스트 바꾸는 작업
@@ -15,18 +29,46 @@ export default function CustomTabs({ tabList }: ICustomTabsProps) {
         size="md"
         variant="solid-rounded"
         overflow="hidden"
-        overflowX={tabList.length <= 4 ? "hidden" : "scroll"}
+        overflowX="scroll"
         colorScheme="teal"
+        position="sticky"
+        top="3.5rem"
+        maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
+        zIndex={9}
+        bgColor="white"
         sx={{
-          "@media (max-width: 517px)": {
-            // base breakpoint
+          "@media (max-width: 32.3125rem)": {
             "::-webkit-scrollbar": {
-              display: tabList.length <= 4 ? "none" : "initial",
+              display: "none",
             },
+            "::-webkit-scrollbar-thumb": {},
+            borderBottom: "1px solid #dbdbdb",
+          },
+          "@media (min-width: 32.3125rem)": {
+            "&:hover": {
+              "::-webkit-scrollbar": {
+                display: "initial",
+                height: "5px",
+                borderRadius: "50px",
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                borderRadius: "50px",
+              },
+            },
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+            "::-webkit-scrollbar-thumb": {},
           },
         }}
       >
-        <TabList mx="1rem" my="0.5rem">
+        <TabList
+          mx="1rem"
+          mt={{ base: "0.1rem", md: "0.5rem" }}
+          mb={{ base: "0.4rem", md: "0.5rem" }}
+          pt="0.1rem"
+        >
           {tabList.map((tab, index) => (
             <Tab
               borderRadius="base"
@@ -39,7 +81,15 @@ export default function CustomTabs({ tabList }: ICustomTabsProps) {
           ))}
         </TabList>
       </Tabs>
-      <div>게시글 리스트</div>
+      <Box
+        sx={{
+          "@media (min-width: 32.3125rem)": {
+            px: "0.1rem",
+          },
+        }}
+      >
+        {children}
+      </Box>
     </>
   );
 }

@@ -15,7 +15,7 @@ export default function ChatItem({ chatItemData }: IChatItemProps) {
   return (
     <Flex flexDirection="row" alignItems="center" px="1rem" py="0.75rem">
       <Flex flex="1" gap="0.75rem" alignItems="center">
-        <Avatar src={avatarUrl} name={username} size="md" />
+        <Avatar src={avatarUrl} name={username} />
         {/* 아바타랑 Link(avatarDetail)로  감싸줘야함 */}
         <Box>
           <Flex alignItems="center" gap="0.25rem">

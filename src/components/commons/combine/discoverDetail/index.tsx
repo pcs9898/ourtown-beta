@@ -9,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Bookmark, ChatBubbleOutline, TurnedInNot } from "@mui/icons-material";
-import AddCommentOrReview from "../formInput";
+import FormInput from "../formInput";
 
 interface IDiscoverDetailProps {
   discoverDetailData: {
@@ -54,7 +54,7 @@ export default function DiscoverDetail({
         </Box>
       </Flex>
 
-      <AddCommentOrReview isComment={false} />
+      <FormInput isComment={false} />
     </Card>
   );
 }

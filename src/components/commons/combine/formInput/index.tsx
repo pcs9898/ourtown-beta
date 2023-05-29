@@ -21,7 +21,7 @@ export default function FormInput({ isComment }: IFormInputProps) {
 
   return (
     <Flex flex="1" gap="0.75rem" alignItems="center" px="1rem" py="0.75rem">
-      <Avatar src={avatarUrl} name={username} size="md" />
+      <Avatar src={avatarUrl} name={username} />
       <Input
         variant="filled"
         placeholder={isComment ? "Add a comment" : "Write a review"}
