@@ -1,4 +1,4 @@
-import { Avatar, Button, Flex, Input } from "@chakra-ui/react";
+import { Avatar, Button, Flex, FormControl, Input } from "@chakra-ui/react";
 
 interface IFormInputProps {
   isComment: boolean;
@@ -20,11 +20,18 @@ export default function FormInput({ isComment }: IFormInputProps) {
   };
 
   return (
-    <Flex flex="1" gap="0.75rem" alignItems="center" px="1rem" py="0.75rem">
+    <FormControl
+      flex="1"
+      gap="0.75rem"
+      alignItems="center"
+      px="1rem"
+      py="0.75rem"
+    >
       <Avatar src={avatarUrl} name={username} />
       <Input
         variant="filled"
         placeholder={isComment ? "Add a comment" : "Write a review"}
+        fontWeight="semibold"
       />
       <Button
         colorScheme="teal"
@@ -33,6 +40,6 @@ export default function FormInput({ isComment }: IFormInputProps) {
       >
         {isComment ? "Comment" : "Review"}
       </Button>
-    </Flex>
+    </FormControl>
   );
 }

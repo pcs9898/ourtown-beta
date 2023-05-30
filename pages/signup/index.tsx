@@ -1,3 +1,5 @@
-export default function PostDetailPage() {
-  return <h1>post detail page</h1>;
+import SignupContainer from "@/src/components/units/signup/signup.container";
+
+export default function SignupPage() {
+  return <SignupContainer />;
 }

@@ -13,21 +13,31 @@ interface ILayoutsProps {
 export default function Layouts({ children }: ILayoutsProps) {
   const { pathname } = useRouter();
 
-  const hideHeaderLayout = pathname === "/signin" || pathname === "/signup";
+  const isLoginSignupLayout = pathname === "/login" || pathname === "/signup";
 
   return (
     <Box maxW="71.875rem" margin="0 auto">
-      {hideHeaderLayout ? null : (
+      {isLoginSignupLayout ? (
+        <Box
+          as="main"
+          justifyContent="center"
+          alignItems="center"
+          w="100vw"
+          h="100vh"
+        >
+          {children}
+        </Box>
+      ) : (
         <>
           <HeaderLayout
             city="suwon"
             mobileSelectButton={true}
             mobileRightIcon={<NotificationsNoneOutlined />}
           />
+          <MainLayout>{children}</MainLayout>
+          <FooterLayout />
         </>
       )}
-      <MainLayout>{children}</MainLayout>
-      <FooterLayout />
     </Box>
   );
 }
