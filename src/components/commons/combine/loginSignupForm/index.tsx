@@ -22,6 +22,7 @@ import { useEffect } from "react";
 interface ILoginSignupFormProps {
   isSignup: boolean;
   onSubmit: (data: ILoginSignupForm) => void;
+  handleGoole: () => void;
 }
 
 export interface ILoginSignupForm {
@@ -33,20 +34,21 @@ export interface ILoginSignupForm {
 export default function LoginSignupForm({
   isSignup,
   onSubmit,
+  handleGoole,
 }: ILoginSignupFormProps) {
   const schema = yup.object().shape({
     ...(isSignup && {
       username: yup
         .string()
         .required("Username is required")
-        .min(3, "Username must be at least 3 characters")
-        .max(20, "Username cannot exceed 20 characters"),
+        .min(1, "Username must be at least 3 characters")
+        .max(5, "Username cannot exceed 20 characters"),
     }),
     email: yup.string().required("Email is required").email("Invalid email"),
     password: yup
       .string()
       .required("Password is required")
-      .min(6, "Password must be at least 6 characters"),
+      .min(1, "Password must be at least 6 characters"),
   });
 
   const {
@@ -123,7 +125,7 @@ export default function LoginSignupForm({
 
           <Divider />
 
-          <Button leftIcon={<Google />} width="100%">
+          <Button leftIcon={<Google />} width="100%" onClick={handleGoole}>
             Continue with google
           </Button>
           <Text fontSize="1rem" fontWeight="semibold">

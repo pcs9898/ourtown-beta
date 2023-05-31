@@ -11,13 +11,19 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react";
 import { NotificationsNone } from "@mui/icons-material";
+import { ReactNode } from "react";
 
 interface ICustomPopoverProps {
   isNotifications: boolean;
+  avatarName?: string;
+  children: ReactNode;
+  settingData?: ReactNode;
 }
 
 export default function CustomPopover({
   isNotifications,
+  avatarName,
+  children,
 }: ICustomPopoverProps) {
   return (
     <Popover>
@@ -30,13 +36,13 @@ export default function CustomPopover({
           />
         ) : (
           //   notification query onclick
-          <Avatar name="Chansoo Park" />
+          <Avatar name={avatarName} cursor="pointer" />
         )}
       </PopoverTrigger>
       <PopoverContent>
         <PopoverArrow />
         <PopoverBody px="1rem" py="0.75rem">
-          {isNotifications ? "notification data" : "setting data"}
+          {children}
         </PopoverBody>
       </PopoverContent>
     </Popover>

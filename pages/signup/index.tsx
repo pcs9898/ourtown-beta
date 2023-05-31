@@ -1,5 +1,8 @@
-import SignupContainer from "@/src/components/units/signup/signup.container";
+import { withAuth } from "@/src/components/commons/customhooks/withAuth";
+import SignupContainerPresenter from "@/src/components/units/signup";
 
-export default function SignupPage() {
-  return <SignupContainer />;
+function SignupPage() {
+  return <SignupContainerPresenter />;
 }
+
+export default SignupPage;

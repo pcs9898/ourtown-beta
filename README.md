@@ -34,5 +34,12 @@
 [ ] timeCount
 
 --feature
-[ ] sign in
-[ ] sign up
+[x] sign in
+[x] sign up
+[ ] create post
+[ ] post list
+[ ] post detail
+[ ] search
+[ ] discover
+[ ] discover detail
+[ ] discover bookmark

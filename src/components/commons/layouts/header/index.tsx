@@ -7,6 +7,7 @@ import {
   IconButton,
   Image,
   useBreakpointValue,
+  useToast,
 } from "@chakra-ui/react";
 import {
   ArrowBackIosNew,
@@ -14,6 +15,11 @@ import {
   NotificationsNone,
 } from "@mui/icons-material";
 import SearchBar from "../../combine/searchBar";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userState } from "@/src/commons/libraries/recoil/recoil";
+import CustomPopover from "../../combine/customPopover";
+import { auth } from "@/src/commons/libraries/firebase/firebase";
+import { useRouter } from "next/router";
 
 interface IHeaderLayoutProps {
   city: string;
@@ -37,6 +43,36 @@ export default function HeaderLayout({
   mobileSearchBar,
 }: IHeaderLayoutProps) {
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const user = useRecoilValue(userState);
+  const router = useRouter();
+  const toast = useToast();
+  const setUserState = useSetRecoilState(userState);
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut().then(() => {
+        setUserState(null);
+        router.push("/login");
+      });
+
+      toast({
+        title: "Success",
+        description: "logout",
+        status: "success",
+        duration: 5000, // Set the desired duration in milliseconds (e.g., 5000 for 5 seconds)
+        isClosable: true,
+      });
+    } catch (error: any) {
+      console.log("로그아웃 에러:", error);
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+        duration: 5000, // Set the desired duration in milliseconds (e.g., 5000 for 5 seconds)
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Flex
@@ -55,7 +91,7 @@ export default function HeaderLayout({
         <>
           {mobileSelectButton && (
             <Button colorScheme="teal" rightIcon={<KeyboardArrowDown />}>
-              {city}
+              {user?.city}
             </Button>
           )}
           {mobileBackButton && (
@@ -101,15 +137,17 @@ export default function HeaderLayout({
               colorScheme="teal"
               rightIcon={<KeyboardArrowDown />}
             >
-              {city}
+              {user?.city}
             </Button>
           </Flex>
-          <SearchBar city={city} />
+          <SearchBar city={user?.city || ""} />
           <Flex gap="0.75rem">
             <IconButton aria-label="Notification Icon" variant="ghost">
               <NotificationsNone />
             </IconButton>
-            <Avatar name="Chan Park" />
+            <CustomPopover isNotifications={false} avatarName={user?.username}>
+              <Button onClick={handleLogout}>로그아웃</Button>
+            </CustomPopover>
           </Flex>
         </Flex>
       )}

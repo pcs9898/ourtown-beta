@@ -7,6 +7,7 @@ import {
   MapOutlined,
 } from "@mui/icons-material";
 import Link from "next/link";
+import CustomModal from "../../../combine/customModal";
 
 const NavButton = styled(Button)`
   font-size: 1.125rem;
@@ -51,14 +52,10 @@ export default function NavLayout() {
         <ChatBubbleOutline />
         <Link href="/">Chats</Link>
       </NavButton>
-      <Button
-        w="100%"
-        fontSize="1.125rem"
-        leftIcon={<AddOutlined />}
-        colorScheme="teal"
-      >
-        Post
-      </Button>
+
+      <CustomModal modalHeaderTitle="Create Post" buttonContent="Post">
+        hi
+      </CustomModal>
     </VStack>
   );
 }

@@ -1,5 +1,8 @@
-import LoginContainer from "@/src/components/units/login/login.container";
+import { withAuth } from "@/src/components/commons/customhooks/withAuth";
+import LoginConatinerPresenter from "@/src/components/units/login";
 
-export default function LoginPage() {
-  return <LoginContainer />;
+function LoginPage() {
+  return <LoginConatinerPresenter />;
 }
+
+export default withAuth(LoginPage);

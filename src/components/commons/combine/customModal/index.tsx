@@ -12,7 +12,11 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ArrowBackIos, ArrowBackIosNew } from "@mui/icons-material";
+import {
+  AddOutlined,
+  ArrowBackIos,
+  ArrowBackIosNew,
+} from "@mui/icons-material";
 import { ReactNode } from "react";
 
 const modalHeaderTitle = "jo";
@@ -32,7 +36,15 @@ export default function CustomModal({
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button
+        w="100%"
+        fontSize="1.125rem"
+        leftIcon={<AddOutlined />}
+        colorScheme="teal"
+        onClick={onOpen}
+      >
+        Post
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} motionPreset="none">
         <ModalOverlay />

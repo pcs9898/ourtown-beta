@@ -21,6 +21,7 @@ export default function FormInput({ isComment }: IFormInputProps) {
 
   return (
     <FormControl
+      display="flex"
       flex="1"
       gap="0.75rem"
       alignItems="center"
