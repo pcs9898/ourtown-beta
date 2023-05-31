@@ -15,7 +15,7 @@ import {
   NotificationsNone,
 } from "@mui/icons-material";
 import SearchBar from "../../combine/searchBar";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
 import CustomPopover from "../../combine/customPopover";
 import { auth } from "@/src/commons/libraries/firebase/firebase";
@@ -43,15 +43,14 @@ export default function HeaderLayout({
   mobileSearchBar,
 }: IHeaderLayoutProps) {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const user = useRecoilValue(userState);
   const router = useRouter();
   const toast = useToast();
-  const setUserState = useSetRecoilState(userState);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
 
   const handleLogout = async () => {
     try {
       await auth.signOut().then(() => {
-        setUserState(null);
+        setCurrentUser(null);
         router.push("/login");
       });
 
@@ -91,7 +90,7 @@ export default function HeaderLayout({
         <>
           {mobileSelectButton && (
             <Button colorScheme="teal" rightIcon={<KeyboardArrowDown />}>
-              {user?.city}
+              {currentUser?.city}
             </Button>
           )}
           {mobileBackButton && (
@@ -137,15 +136,18 @@ export default function HeaderLayout({
               colorScheme="teal"
               rightIcon={<KeyboardArrowDown />}
             >
-              {user?.city}
+              {currentUser?.city}
             </Button>
           </Flex>
-          <SearchBar city={user?.city || ""} />
+          <SearchBar city={currentUser?.city || ""} />
           <Flex gap="0.75rem">
             <IconButton aria-label="Notification Icon" variant="ghost">
               <NotificationsNone />
             </IconButton>
-            <CustomPopover isNotifications={false} avatarName={user?.username}>
+            <CustomPopover
+              isNotifications={false}
+              avatarName={currentUser?.username}
+            >
               <Button onClick={handleLogout}>로그아웃</Button>
             </CustomPopover>
           </Flex>

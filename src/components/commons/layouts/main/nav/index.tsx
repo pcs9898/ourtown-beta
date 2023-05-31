@@ -8,6 +8,7 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import CustomModal from "../../../combine/customModal";
+import CreatePostContainer from "@/src/components/units/createPost/createPost.container";
 
 const NavButton = styled(Button)`
   font-size: 1.125rem;
@@ -27,6 +28,8 @@ NavButton.defaultProps = {
 };
 
 export default function NavLayout() {
+  const createPost = () => {};
+
   return (
     <VStack
       as="nav"
@@ -53,8 +56,13 @@ export default function NavLayout() {
         <Link href="/">Chats</Link>
       </NavButton>
 
-      <CustomModal modalHeaderTitle="Create Post" buttonContent="Post">
-        hi
+      <CustomModal
+        modalHeaderTitle="Create Post"
+        buttonContent="Post"
+        createPost={createPost}
+        isFixSize={true}
+      >
+        <CreatePostContainer />
       </CustomModal>
     </VStack>
   );
