@@ -31,15 +31,23 @@
 [x] footer(mobile)
 
 -- Utils
-[ ] timeCount
+[x] timeFormatAgo
 
---feature
+-- Custom Hooks
+[x] withAuth
+
+-- Feature
 [x] sign in
 [x] sign up
-[ ] create post
-[ ] post list
-[ ] post detail
+[x] create post
+[x] post detail
+[x] post list
 [ ] search
+[ ] me
+[ ] profile detail
+[ ] edit profile
+[ ] friends
+[ ] settings
 [ ] discover
 [ ] discover detail
 [ ] discover bookmark

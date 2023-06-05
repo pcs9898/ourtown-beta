@@ -1,3 +1,6 @@
+import { queryClient } from "@/src/commons/libraries/react-query/react-query";
+import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
+import formatTimeAgo from "@/src/commons/utils/formatTimgAgo";
 import {
   Avatar,
   Box,
@@ -8,6 +11,7 @@ import {
   CardHeader,
   Flex,
   Heading,
+  Highlight,
   IconButton,
   Image,
   Text,
@@ -18,42 +22,97 @@ import {
   FavoriteBorder,
   MoreHoriz,
 } from "@mui/icons-material";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface IPostItemProps {
   postItemData: {
+    id: string;
     town: string;
-    time: string;
+    createdAt: number;
     likeCount: number;
-    commentCount: number;
-    contents: string;
-    avatarUrl: string;
-    username: string;
-    imgUrl: string;
-    isLiked: boolean;
+    commentsId: string[];
+    content: string;
+    imageUrl: string;
+    uid: string;
+    user: {
+      id: string;
+      avatarUrl: string;
+      username: string;
+      likedPosts: string[];
+    };
   };
+  toggleLikePost: (postId: string) => void;
 }
 
-export default function PostItem({ postItemData }: IPostItemProps) {
+export default function PostItem({
+  postItemData,
+  toggleLikePost,
+}: IPostItemProps) {
   const {
+    id,
     town,
-    time,
+    createdAt,
     likeCount,
-    commentCount,
-    contents,
-    imgUrl,
-    avatarUrl,
-    username,
-    isLiked,
+    commentsId,
+    content,
+    uid,
+    imageUrl,
+    user: { avatarUrl, username },
   } = postItemData;
+  const currentUser = useRecoilValue(userState);
+  const setCurrentHeader = useSetRecoilState(headerState);
+  const router = useRouter();
+
+  const onClickPostDetail = async () => {
+    await setCurrentHeader({
+      mobileBackButton: true,
+      mobileSubTitle: `${username}'s Post`,
+    });
+
+    router.push(`/posts/${id}`);
+  };
 
   return (
-    <Card>
+    <Card width="100%" boxShadow="md">
       <CardHeader display="flex" px="1rem" py="0.75rem">
         <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">
-          <Avatar name={username} src={avatarUrl} />
+          <Avatar
+            as={Link}
+            href={`/profile/${uid}`}
+            name={username}
+            src={avatarUrl}
+          />
+
           <Box>
-            <Heading size="sm">{username}</Heading>
-            <Text color="subText">{town + " ‧ " + time}</Text>
+            <Flex gap="0.25rem">
+              <Heading size="sm" as={Link} href={`/profile/${uid}`}>
+                {username}
+              </Heading>
+              {uid === currentUser?.uid && ( // true 자리에 isUserLoggedIn 비교 해서 넣기
+                <Highlight
+                  query="Author"
+                  styles={{
+                    bg: "main",
+                    borderRadius: "base",
+                    color: "white",
+                    px: "0.375rem",
+                    py: "0",
+                    fontWeight: "semibold",
+                    marginLeft: "0.25rem",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Author
+                </Highlight>
+              )}
+            </Flex>
+            <Flex color="subText" gap="0.25rem">
+              <Text>{town}</Text>
+              <Text>‧</Text>
+              <Text>{formatTimeAgo(createdAt)}</Text>
+            </Flex>
           </Box>
         </Flex>
         {/* 여기에 아바타 링크걸기 */}
@@ -64,23 +123,42 @@ export default function PostItem({ postItemData }: IPostItemProps) {
         />
       </CardHeader>
 
-      <Image height="12rem" objectFit="cover" src={imgUrl} alt="Chakra UI" />
+      <Box onClick={onClickPostDetail} cursor="pointer">
+        {imageUrl && (
+          <Image
+            height="12rem"
+            width="100%"
+            objectFit="cover"
+            src={imageUrl}
+            alt="Chakra UI"
+          />
+        )}
 
-      <CardBody px="1rem" py="0.75rem">
-        <Text fontSize="1rem">{contents}</Text>
-      </CardBody>
-      {/* 여기에 postdetail 링크걸기 */}
+        <CardBody px="1rem" py="0.75rem">
+          <Text fontSize="1rem">{content}</Text>
+        </CardBody>
+      </Box>
       <CardFooter px="1rem" py="0.75rem" justify="flex-end">
         <Button
           variant="ghost"
-          leftIcon={isLiked ? <Favorite /> : <FavoriteBorder />}
+          leftIcon={
+            currentUser?.likedPosts?.includes(id) ? (
+              <Favorite />
+            ) : (
+              <FavoriteBorder />
+            )
+          }
+          onClick={() => toggleLikePost(id)}
         >
+          {" "}
           {likeCount}
-          {/* 여기에 likePost mutation걸기 */}
         </Button>
-        <Button variant="ghost" leftIcon={<ChatBubbleOutline />}>
-          {commentCount}
-          {/* 여기에 postdetail 링크걸기 */}
+        <Button
+          onClick={onClickPostDetail}
+          variant="ghost"
+          leftIcon={<ChatBubbleOutline />}
+        >
+          {commentsId.length}
         </Button>
       </CardFooter>
     </Card>

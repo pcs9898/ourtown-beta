@@ -7,18 +7,22 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 interface ICustomTabsProps {
-  tabList: string[];
   isCreatePost?: boolean;
   onClickTab: (tab: string) => void;
+  categoryKindOptions:
+    | "mainCategory"
+    | "dicoverBigCategory"
+    | "discoverSmallRestaurantCategory"
+    | "profileCategory";
 }
 
-export default function CustomTabs({
-  tabList,
+function CustomTabs({
   isCreatePost,
   onClickTab,
+  categoryKindOptions,
 }: ICustomTabsProps) {
   const pxValue = useBreakpointValue({
     base: 0,
@@ -27,6 +31,43 @@ export default function CustomTabs({
 
   const handleClickTab = (tab: string = "Daily") => {
     onClickTab(tab);
+  };
+
+  const getCategoryOptions = (categoryKindOptions: string): string[] => {
+    switch (categoryKindOptions) {
+      case "mainCategory":
+        return [
+          "Daily",
+          "News",
+          "Secondhand",
+          "Restaurants",
+          "Parttime",
+          "Together",
+          "Exercise",
+        ];
+      case "dicoverBigCategory":
+        return [
+          "Restaurant",
+          "Cafe/Dessert",
+          "Salon/Beauty",
+          "Hospital/Pharmacy",
+          "Household Goods",
+          "Exercise",
+          "Cultural Activities",
+        ];
+      case "discoverSmallRestaurantCategory":
+        return [
+          "Korean Cuisine",
+          "Western Cuisine",
+          "Chinese Cuisine",
+          "Snacks",
+          "Japanese",
+        ];
+      case "profileCategory":
+        return ["My Posts", "Liked Posts", "Bookmarked Places"];
+      default:
+        return ["hi"];
+    }
   };
 
   return (
@@ -75,7 +116,7 @@ export default function CustomTabs({
           mb={{ base: "0.4rem", md: "0.5rem" }}
           pt="0.1rem"
         >
-          {tabList.map((tab, index) => (
+          {getCategoryOptions(categoryKindOptions).map((tab, index) => (
             <Tab
               borderRadius="base"
               fontWeight="semibold"
@@ -87,16 +128,8 @@ export default function CustomTabs({
           ))}
         </TabList>
       </Tabs>
-      {/* <Box
-        sx={{
-          "@media (min-width: 32.3125rem)": {
-            px: "0.1rem",
-          },
-        }}
-      >
-        {children} */}
-      {/* 커스텀탭에 부모가 프롭스로 함수넘겨서 어떤탭했는지 보고받기 */}
-      {/* </Box> */}
     </>
   );
 }
+
+export default React.memo(CustomTabs);

@@ -16,16 +16,14 @@ import { ReactNode, cloneElement } from "react";
 
 interface ICustomModalProps {
   children: ReactNode;
-  modalHeaderTitle: string;
-  buttonContent: string;
   isFixSize: boolean;
-  createPost?: () => void;
+  isButtonHideMdScreen?: boolean;
 }
 
 export default function CustomModal({
   children,
   isFixSize,
-  createPost,
+  isButtonHideMdScreen = false,
 }: ICustomModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -35,15 +33,21 @@ export default function CustomModal({
 
   return (
     <>
-      <Button
-        w="100%"
-        fontSize="1.125rem"
-        leftIcon={<AddOutlined />}
-        colorScheme="teal"
-        onClick={onOpen}
-      >
-        Post
-      </Button>
+      {!isButtonHideMdScreen && (
+        <Button
+          fontSize="1.125rem"
+          leftIcon={<AddOutlined />}
+          colorScheme="teal"
+          onClick={onOpen}
+          position={{ base: "fixed", md: "unset" }}
+          bottom="5rem"
+          w={{ base: "5.5rem", md: "100%" }}
+          float="right"
+          right="0.5rem"
+        >
+          Post
+        </Button>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose} motionPreset="none">
         <ModalOverlay />

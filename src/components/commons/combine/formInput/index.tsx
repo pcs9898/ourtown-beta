@@ -1,22 +1,24 @@
+import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { Avatar, Button, Flex, FormControl, Input } from "@chakra-ui/react";
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
 
 interface IFormInputProps {
   isComment: boolean;
+  onSubmit: (data: string) => void;
 }
 
-export default function FormInput({ isComment }: IFormInputProps) {
-  //isUserLoggedIn 으로 현재 로그인 한 유저 프로필 불러오기
-  const username = "Park Chansoo";
-  const avatarUrl = "";
+export default function FormInput({ isComment, onSubmit }: IFormInputProps) {
+  const currentUser = useRecoilValue(userState);
+  const [content, setContent] = useState("");
 
-  //댓글 등록하기
-  const handleCommentSubmit = () => {
-    console.log("hi");
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(event.target.value);
   };
 
-  //write a review
-  const handleReviewSubmit = () => {
-    console.log("hi");
+  const handleFormSubmit = () => {
+    onSubmit(content);
+    setContent(""); // 폼 제출 후에는 content를 초기화합니다.
   };
 
   return (
@@ -28,17 +30,15 @@ export default function FormInput({ isComment }: IFormInputProps) {
       px="1rem"
       py="0.75rem"
     >
-      <Avatar src={avatarUrl} name={username} />
+      <Avatar src={currentUser?.avatarUrl} name={currentUser?.username} />
       <Input
         variant="filled"
         placeholder={isComment ? "Add a comment" : "Write a review"}
         fontWeight="semibold"
+        value={content}
+        onChange={handleInputChange}
       />
-      <Button
-        colorScheme="teal"
-        flex="none"
-        onClick={isComment ? handleCommentSubmit : handleReviewSubmit}
-      >
+      <Button colorScheme="teal" flex="none" onClick={handleFormSubmit}>
         {isComment ? "Comment" : "Review"}
       </Button>
     </FormControl>

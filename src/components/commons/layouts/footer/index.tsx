@@ -6,8 +6,13 @@ import {
   MapOutlined,
   SearchOutlined,
 } from "@mui/icons-material";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function FooterLayout() {
+  const router = useRouter();
+  const pathname = router.pathname;
+
   return (
     <Box as="footer" display={{ md: "none" }}>
       <Flex
@@ -23,31 +28,50 @@ export default function FooterLayout() {
         zIndex="sticky"
         borderTop="1px solid #dbdbdb"
       >
-        <IconButton
-          icon={<HomeOutlined style={{ fontSize: "2rem" }} />}
-          aria-label="Home"
-          variant="ghost"
-        />
-        <IconButton
-          icon={<SearchOutlined style={{ fontSize: "2rem" }} />}
-          aria-label="Search"
-          variant="ghost"
-        />
-        <IconButton
-          icon={<MapOutlined style={{ fontSize: "2rem" }} />}
-          aria-label="Notifications"
-          variant="ghost"
-        />
-        <IconButton
-          icon={<ChatBubbleOutlineOutlined style={{ fontSize: "2rem" }} />}
-          aria-label="Messages"
-          variant="ghost"
-        />
-        <IconButton
-          icon={<AccountCircleOutlined style={{ fontSize: "2rem" }} />}
-          aria-label="Profile"
-          variant="ghost"
-        />
+        <Link href="/">
+          <IconButton
+            icon={<HomeOutlined style={{ fontSize: "2rem" }} />}
+            aria-label="Home"
+            variant="ghost"
+            color={
+              pathname === "/" || pathname.includes("/posts/")
+                ? "teal"
+                : "black"
+            }
+          />
+        </Link>
+        <Link href="/search">
+          <IconButton
+            icon={<SearchOutlined style={{ fontSize: "2rem" }} />}
+            aria-label="Search"
+            variant="ghost"
+            color={pathname === "/search" ? "teal" : "black"}
+          />
+        </Link>
+        <Link href="/discover">
+          <IconButton
+            icon={<MapOutlined style={{ fontSize: "2rem" }} />}
+            aria-label="Discover"
+            variant="ghost"
+            color={pathname.startsWith("/discover") ? "teal" : "black"}
+          />
+        </Link>
+        <Link href="/chat">
+          <IconButton
+            icon={<ChatBubbleOutlineOutlined style={{ fontSize: "2rem" }} />}
+            aria-label="Messages"
+            variant="ghost"
+            color={pathname.startsWith("/chat") ? "teal" : "black"}
+          />
+        </Link>
+        <Link href="/me">
+          <IconButton
+            icon={<AccountCircleOutlined style={{ fontSize: "2rem" }} />}
+            aria-label="My Profile"
+            variant="ghost"
+            color={pathname.startsWith("/me") ? "teal" : "black"}
+          />
+        </Link>
       </Flex>
     </Box>
   );

@@ -8,6 +8,7 @@ import {
   CardHeader,
   Flex,
   Heading,
+  Highlight,
   IconButton,
   Image,
   Text,
@@ -19,43 +20,79 @@ import {
   MoreHoriz,
 } from "@mui/icons-material";
 import AddCommentOrReview from "../formInput";
+import Link from "next/link";
+import formatTimeAgo from "@/src/commons/utils/formatTimgAgo";
+import { useRecoilValue } from "recoil";
+import { userState } from "@/src/commons/libraries/recoil/recoil";
 
 interface IPostDetailProps {
-  postDetailData: {
+  postData: {
+    uid: string;
+    id: string;
     town: string;
-    time: string;
+
     likeCount: number;
-    commentCount: number;
-    contents: string;
-    avatarUrl: string;
-    username: string;
-    imgUrl: string;
-    isLiked: boolean;
+    content: string;
+    imageUrl?: string;
+    createdAt: number;
+    commentsId: string[];
   };
+  userData: {
+    uid: string;
+    username: string;
+    avatarUrl?: string;
+  };
+  isLiked: boolean;
+  createComment: (data: string) => void;
+  commentCount: number;
+  toggleLikePost: () => void;
 }
 
-export default function PostDetail({ postDetailData }: IPostDetailProps) {
-  const {
-    town,
-    time,
-    likeCount,
-    commentCount,
-    contents,
-    imgUrl,
-    avatarUrl,
-    username,
-    isLiked,
-  } = postDetailData;
+export default function PostDetail({
+  postData,
+  userData,
+  createComment,
+  toggleLikePost,
+}: IPostDetailProps) {
+  const { town, createdAt, likeCount, content, imageUrl, uid, id, commentsId } =
+    postData;
+  const { username, avatarUrl } = userData;
+  const currentUser = useRecoilValue(userState);
 
   return (
-    <>
-      <Card>
+    <Box position="sticky" top="3.5rem" zIndex={1200} bgColor="white">
+      <Card mb="2px" boxShadow="md">
         <CardHeader display="flex" px="1rem" py="0.75rem">
           <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">
-            <Avatar name={username} src={avatarUrl} />
+            <Link href={`/profile/${uid}`}>
+              <Avatar name={username} src={avatarUrl} />
+            </Link>
             <Box>
-              <Heading size="sm">{username}</Heading>
-              <Text color="subText">{town + " ‧ " + time}</Text>
+              <Flex gap="0.25rem">
+                <Heading size="sm">{username}</Heading>
+                {uid === currentUser?.uid && ( // true 자리에 isUserLoggedIn 비교 해서 넣기
+                  <Highlight
+                    query="Author"
+                    styles={{
+                      bg: "main",
+                      borderRadius: "base",
+                      color: "white",
+                      px: "0.375rem",
+                      py: "0",
+                      fontWeight: "semibold",
+                      marginLeft: "0.25rem",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Author
+                  </Highlight>
+                )}
+              </Flex>
+              <Flex color="subText" gap="0.25rem">
+                <Text>{town}</Text>
+                <Text>‧</Text>
+                <Text>{formatTimeAgo(createdAt)}</Text>
+              </Flex>
             </Box>
           </Flex>
           {/* 여기에 아바타 링크걸기 */}
@@ -66,10 +103,17 @@ export default function PostDetail({ postDetailData }: IPostDetailProps) {
           />
         </CardHeader>
 
-        <Image height="12rem" objectFit="cover" src={imgUrl} alt="Chakra UI" />
+        {imageUrl && (
+          <Image
+            height="12rem"
+            objectFit="cover"
+            src={imageUrl}
+            alt="Chakra UI"
+          />
+        )}
 
         <CardBody px="1rem" py="0.75rem">
-          <Text fontSize="1rem">{contents}</Text>
+          <Text fontSize="1rem">{content}</Text>
         </CardBody>
 
         <CardFooter
@@ -80,17 +124,24 @@ export default function PostDetail({ postDetailData }: IPostDetailProps) {
         >
           <Button
             variant="ghost"
-            leftIcon={isLiked ? <Favorite /> : <FavoriteBorder />}
+            leftIcon={
+              currentUser?.likedPosts?.includes(id) ? (
+                <Favorite />
+              ) : (
+                <FavoriteBorder />
+              )
+            }
+            onClick={toggleLikePost}
           >
             {" "}
             {likeCount}
           </Button>
           <Button variant="ghost" leftIcon={<ChatBubbleOutline />}>
-            {commentCount}
+            {postData.commentsId.length}
           </Button>
         </CardFooter>
-        <AddCommentOrReview isComment={true} />
+        <AddCommentOrReview onSubmit={createComment} isComment={true} />
       </Card>
-    </>
+    </Box>
   );
 }

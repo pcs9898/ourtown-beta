@@ -1,7 +1,5 @@
-import { useRouter } from "next/router";
+import PostDetailContainer from "@/src/components/units/postDetail/postDetail.container";
 
 export default function PostDetailPage() {
-  const router = useRouter();
-
-  return <h1>routerPathname: {router.asPath}</h1>;
+  return <PostDetailContainer />;
 }

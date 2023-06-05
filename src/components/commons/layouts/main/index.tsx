@@ -14,7 +14,8 @@ export default function MainLayout({ children }: IMainLayoutProps) {
       gap="0.625rem"
       px={{ base: 0, md: "0.625rem" }}
       justifyContent={{ base: "center", md: "unset" }}
-      // mt={{ md: "0.625rem" }}
+      minH="15rem"
+      h="100%"
     >
       <NavLayout />
       <SectionLayout>{children}</SectionLayout>

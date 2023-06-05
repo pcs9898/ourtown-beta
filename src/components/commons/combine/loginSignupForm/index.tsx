@@ -20,6 +20,7 @@ import * as yup from "yup";
 import { useEffect } from "react";
 
 interface ILoginSignupFormProps {
+  isButtonLoading: boolean;
   isSignup: boolean;
   onSubmit: (data: ILoginSignupForm) => void;
   handleGoole: () => void;
@@ -35,6 +36,7 @@ export default function LoginSignupForm({
   isSignup,
   onSubmit,
   handleGoole,
+  isButtonLoading,
 }: ILoginSignupFormProps) {
   const schema = yup.object().shape({
     ...(isSignup && {
@@ -119,13 +121,19 @@ export default function LoginSignupForm({
             width="100%"
             colorScheme="teal"
             isDisabled={!isValid}
+            isLoading={isButtonLoading}
           >
             {isSignup ? "Sign up" : "Log in"}
           </Button>
 
           <Divider />
 
-          <Button leftIcon={<Google />} width="100%" onClick={handleGoole}>
+          <Button
+            leftIcon={<Google />}
+            width="100%"
+            onClick={handleGoole}
+            isLoading={isButtonLoading}
+          >
             Continue with google
           </Button>
           <Text fontSize="1rem" fontWeight="semibold">

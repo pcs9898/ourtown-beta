@@ -3,26 +3,30 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { useToast } from "@chakra-ui/react";
 import { getDownloadURL } from "firebase/storage";
 import { app, db } from "@/src/commons/libraries/firebase/firebase";
-import { useRecoilValue } from "recoil";
-import { userState } from "@/src/commons/libraries/recoil/recoil";
-import { addDoc, collection } from "firebase/firestore";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { ICreatePostContainer } from "./createPost.types";
+import { ICreatePostContainerProps } from "./createPost.types";
 import CreatePostPresenter from "./createPost.presenert";
+import { queryClient } from "@/src/commons/libraries/react-query/react-query";
 
-export default function CreatePostContainer({ onClose }: ICreatePostContainer) {
+export default function CreatePostContainer({
+  onClose,
+}: ICreatePostContainerProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
   const [category, setCategory] = useState("");
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const currentUser = useRecoilValue(userState);
+  const setCurrentHeader = useSetRecoilState(headerState);
   const toast = useToast();
   const router = useRouter();
 
   const onClickSubmit = async () => {
     setIsButtonLoading(true);
-    let photoUrl;
+    let imageUrl;
     // file storage에 올리는 로직
     try {
       if (selectedFile) {
@@ -31,20 +35,40 @@ export default function CreatePostContainer({ onClose }: ICreatePostContainer) {
         await uploadBytes(storageRef, selectedFile);
 
         // 업로드된 이미지의 다운로드 URL 가져오기
-        photoUrl = await getDownloadURL(storageRef);
+        imageUrl = await getDownloadURL(storageRef);
       }
       const newPost = {
         uid: currentUser?.uid,
+        city: currentUser?.city,
+        town: currentUser?.town,
         category: category || "Daily",
         content,
-        photoUrl: photoUrl || "",
+        imageUrl: imageUrl || "",
+        likeCount: 0,
+        commentCount: 0,
+        createdAt: new Date().getTime(),
+        commentsId: [],
       };
 
       const result = await addDoc(collection(db, "posts"), newPost);
 
-      onClose();
-
-      router.push(`/posts/${result.id}`);
+      queryClient.setQueryData(["post", result.id], () => {
+        id: result.id;
+        uid: newPost.uid;
+        town: newPost.town;
+        createdAt: newPost.createdAt;
+        likeCount: newPost.likeCount;
+        content: newPost.content;
+        imageUrl: newPost.imageUrl;
+        commentsId: newPost.commentsId;
+      });
+      setCurrentHeader({
+        mobileBackButton: true,
+        mobileSubTitle: `${currentUser?.username}'s Post`,
+      });
+      router.push(`/posts/${result.id}`).then(() => {
+        if (onClose) onClose();
+      });
     } catch (error: any) {
       console.error("파일 업로드 중 오류가 발생했습니다:", error);
       toast({

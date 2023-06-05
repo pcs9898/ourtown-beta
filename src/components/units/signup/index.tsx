@@ -13,6 +13,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
+import { useState } from "react";
 
 const reverseGeocode = async (
   lat: number,
@@ -52,8 +53,10 @@ export default function SignupContainerPresenter() {
   const router = useRouter();
   const toast = useToast();
   const setUserState = useSetRecoilState(userState);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
 
   async function signUpWithGoogle() {
+    setIsButtonLoading(true);
     const provider = new GoogleAuthProvider();
 
     try {
@@ -69,6 +72,8 @@ export default function SignupContainerPresenter() {
         username: user.displayName,
         city,
         town,
+        likedPosts: [],
+        likedDiscovers: [],
       });
 
       await setUserState({
@@ -77,9 +82,13 @@ export default function SignupContainerPresenter() {
         username: user.displayName || "",
         city,
         town,
+        likedPosts: [],
+        likedDiscovers: [],
       });
       router.push("/");
+      setIsButtonLoading(false);
     } catch (error: any) {
+      setIsButtonLoading(false);
       if (error instanceof GeolocationPositionError) {
         handleGeolocationError(error);
       } else {
@@ -97,6 +106,7 @@ export default function SignupContainerPresenter() {
 
   const onSubmit = async ({ username, email, password }: ILoginSignupForm) => {
     try {
+      setIsButtonLoading(true);
       const {
         coords: { latitude, longitude },
       } = await getPosition();
@@ -112,6 +122,8 @@ export default function SignupContainerPresenter() {
         username,
         city,
         town,
+        likedPosts: [],
+        likedDiscovers: [],
       });
 
       if (username) {
@@ -121,11 +133,15 @@ export default function SignupContainerPresenter() {
           username,
           city,
           town,
+          likedPosts: [],
+          likedDiscovers: [],
         });
       }
 
       router.push("/");
+      setIsButtonLoading(false);
     } catch (error: any) {
+      setIsButtonLoading(false);
       if (error instanceof GeolocationPositionError) {
         handleGeolocationError(error);
       } else {
@@ -144,6 +160,7 @@ export default function SignupContainerPresenter() {
   return (
     <>
       <LoginSignupForm
+        isButtonLoading={isButtonLoading}
         isSignup={true}
         onSubmit={onSubmit}
         handleGoole={signUpWithGoogle}

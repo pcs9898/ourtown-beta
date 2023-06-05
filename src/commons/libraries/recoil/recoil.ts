@@ -1,14 +1,12 @@
 import { atom } from "recoil";
+import { IHeaderState, IUser } from "../../types/globalTypes";
 
-type User = {
-  uid: string;
-  email: string;
-  username: string;
-  city: string;
-  town: string;
-};
-
-export const userState = atom<User | null>({
+export const userState = atom<IUser | null>({
   key: "userState",
+  default: null,
+});
+
+export const headerState = atom<IHeaderState | null>({
+  key: "headerState",
   default: null,
 });

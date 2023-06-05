@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import CustomModal from "../../../combine/customModal";
 import CreatePostContainer from "@/src/components/units/createPost/createPost.container";
+import { useRouter } from "next/router";
 
 const NavButton = styled(Button)`
   font-size: 1.125rem;
@@ -28,7 +29,8 @@ NavButton.defaultProps = {
 };
 
 export default function NavLayout() {
-  const createPost = () => {};
+  const router = useRouter();
+  const pathname = router.pathname;
 
   return (
     <VStack
@@ -42,26 +44,37 @@ export default function NavLayout() {
       maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
       overflow="auto"
       zIndex={9}
+      h="100%"
     >
-      <NavButton color="main">
+      <NavButton
+        as={Link}
+        href="/"
+        color={
+          pathname === "/" || pathname.includes("/posts/") ? "teal" : "black"
+        }
+      >
         <HomeOutlined />
-        <Link href="/">Home</Link>
-      </NavButton>
-      <NavButton>
-        <MapOutlined />
-        <Link href="/">Discover</Link>
-      </NavButton>
-      <NavButton>
-        <ChatBubbleOutline />
-        <Link href="/">Chats</Link>
+        Home
       </NavButton>
 
-      <CustomModal
-        modalHeaderTitle="Create Post"
-        buttonContent="Post"
-        createPost={createPost}
-        isFixSize={true}
+      <NavButton
+        as={Link}
+        href="/discover"
+        color={pathname.startsWith("/discover") ? "teal" : "black"}
       >
+        <MapOutlined />
+        Discover
+      </NavButton>
+      <NavButton
+        as={Link}
+        href="/chat"
+        color={pathname.startsWith("/chat") ? "teal" : "black"}
+      >
+        <ChatBubbleOutline />
+        Chats
+      </NavButton>
+
+      <CustomModal buttonContent="Post" isFixSize={true}>
         <CreatePostContainer />
       </CustomModal>
     </VStack>

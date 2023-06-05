@@ -1,11 +1,11 @@
+import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Search } from "@mui/icons-material";
+import { useRecoilValue } from "recoil";
 
-interface ISearchBarProps {
-  city: string;
-}
+export default function SearchBar() {
+  const currentUser = useRecoilValue(userState);
 
-export default function SearchBar({ city }: ISearchBarProps) {
   return (
     <InputGroup
       flex="none"
@@ -35,7 +35,10 @@ export default function SearchBar({ city }: ISearchBarProps) {
       <InputLeftElement>
         <Search />
       </InputLeftElement>
-      <Input variant="filled" placeholder={`Search near ${city}`} />
+      <Input
+        variant="filled"
+        placeholder={`Search near ${currentUser?.city}`}
+      />
     </InputGroup>
   );
 }

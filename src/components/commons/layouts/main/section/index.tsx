@@ -9,10 +9,16 @@ interface ISectionLayoutProps {
 export default function SectionLayout({ children }: ISectionLayoutProps) {
   const { pathname } = useRouter();
 
-  const isWideSection = pathname === "/discover" || pathname === "chat";
+  const isWideSection = pathname === "/discover" || pathname === "/chat";
 
   return (
-    <Box as="section" maxW={isWideSection ? "none" : "36.25rem"} minW="20rem">
+    <Box
+      flex="1"
+      as="section"
+      w="36.25rem"
+      maxW={isWideSection ? "none" : "36.25rem"}
+      minW="20rem"
+    >
       {children}
     </Box>
   );

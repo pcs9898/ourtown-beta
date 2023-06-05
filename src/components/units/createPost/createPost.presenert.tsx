@@ -85,15 +85,7 @@ export default function CreatePostPresenter({
       >
         <CustomTabs
           isCreatePost={true}
-          tabList={[
-            "Daily",
-            "News",
-            "Secondhand",
-            "Restaurants",
-            "Parttime",
-            "Together",
-            "Exercise",
-          ]}
+          categoryKindOptions="mainCategory"
           onClickTab={onClickTab}
         />
 
@@ -118,29 +110,32 @@ export default function CreatePostPresenter({
             // height="100%"
             onChange={(e) => setContent(e.target.value)}
           />
-          <Flex justifyContent="flex-start" alignItems="center" gap="1rem">
-            {/* <FormControl> */}
-            <Flex align="center">
-              <FormLabel htmlFor="image-upload">
-                <IconButton
-                  as="label"
-                  htmlFor="image-upload"
-                  aria-label="Upload Image"
-                  icon={<PhotoIcon />}
-                  // size="lg"
-                  colorScheme="teal"
-                  cursor="pointer"
-                />
-              </FormLabel>
-              <Input
-                type="file"
-                id="image-upload"
-                accept="image/*"
-                display="none"
-                onChange={onChangeFile}
+          <Flex gap="1rem">
+            <FormLabel
+              htmlFor="image-upload"
+              h="100%"
+              mx="0"
+              display="flex"
+              alignItems="center"
+            >
+              <IconButton
+                as="label"
+                htmlFor="image-upload"
+                aria-label="Upload Image"
+                icon={<PhotoIcon />}
+                // size="lg"
+                colorScheme="teal"
+                cursor="pointer"
               />
-            </Flex>
-            {/* </FormControl> */}
+            </FormLabel>
+            <Input
+              type="file"
+              id="image-upload"
+              accept="image/*"
+              display="none"
+              onChange={onChangeFile}
+            />
+
             <Box w="5rem" h="5rem">
               {previewImage && (
                 <Img objectFit="cover" w="100%" h="100%" src={previewImage} />

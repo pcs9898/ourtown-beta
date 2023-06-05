@@ -3,13 +3,14 @@ import FooterLayout from "./footer";
 import HeaderLayout from "./header";
 import MainLayout from "./main";
 import { useRouter } from "next/router";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { NotificationsNoneOutlined } from "@mui/icons-material";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/src/commons/libraries/firebase/firebase";
+import CustomSpinner from "../combine/customSpinner";
 
 interface ILayoutsProps {
   children: ReactNode;
@@ -17,7 +18,7 @@ interface ILayoutsProps {
 
 export default function Layouts({ children }: ILayoutsProps) {
   const router = useRouter();
-  const setUserState = useSetRecoilState(userState);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
   const isLoginSignupLayout =
     router.pathname === "/login" || router.pathname === "/signup";
   const [isloading, setIsloading] = useState(true);
@@ -32,30 +33,36 @@ export default function Layouts({ children }: ILayoutsProps) {
           if (userSnapshot.exists()) {
             const userData = userSnapshot.data();
 
-            setUserState({
+            setCurrentUser({
               uid: user.uid,
               email: user.email || "",
               username: userData.username,
               city: userData.city,
               town: userData.town,
+              likedPosts: userData.likedPosts,
+              likedDiscovers: userData.likedDiscovers,
             });
+
+            setIsloading(false);
           } else {
-            setUserState(null);
+            setCurrentUser(null);
           }
         } catch (error) {
           console.log(error);
         }
+      } else {
+        router.push("/login");
       }
       setIsloading(false);
     });
-    // setIsLoading(false);
+
     return () => {
       unsubscribe();
     };
   }, []);
 
   if (isloading) {
-    return <h1>loading</h1>;
+    return <CustomSpinner spinnerType="layout" />;
   }
 
   return isLoginSignupLayout ? (
@@ -69,16 +76,14 @@ export default function Layouts({ children }: ILayoutsProps) {
       {children}
     </Box>
   ) : (
-    <Box maxW="71.875rem" margin="0 auto">
-      <>
-        <HeaderLayout
-          city="suwon"
-          mobileSelectButton={true}
-          mobileRightIcon={<NotificationsNoneOutlined />}
-        />
-        <MainLayout>{children}</MainLayout>
-        <FooterLayout />
-      </>
-    </Box>
+    currentUser && (
+      <Box maxW="71.875rem" margin="0 auto" minH="15rem">
+        <>
+          <HeaderLayout />
+          <MainLayout>{children}</MainLayout>
+          <FooterLayout />
+        </>
+      </Box>
+    )
   );
 }

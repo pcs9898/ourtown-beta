@@ -8,14 +8,17 @@ import { doc, getDoc } from "firebase/firestore";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function LoginConatinerPresenter() {
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
   const router = useRouter();
   const toast = useToast();
   const setUserState = useSetRecoilState(userState);
 
   async function signInWithGoogle() {
     try {
+      setIsButtonLoading(true);
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -30,9 +33,11 @@ export default function LoginConatinerPresenter() {
           username: userData.username,
           city: userData.city,
           town: userData.town,
+          isLiked: userData.isLiked,
         });
       }
       router.push("/");
+      setIsButtonLoading(false);
       toast({
         title: "Success",
         description: "Login Sucess",
@@ -49,11 +54,13 @@ export default function LoginConatinerPresenter() {
         duration: 5000, // Set the desired duration in milliseconds (e.g., 5000 for 5 seconds)
         isClosable: true,
       });
+      setIsButtonLoading(false);
     }
   }
 
   const onSubmit = async ({ email, password }: ILoginSignupForm) => {
     try {
+      setIsButtonLoading(true);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
 
       const userSnapshot = await getDoc(doc(db, "users", user.uid));
@@ -67,9 +74,11 @@ export default function LoginConatinerPresenter() {
           username: userData.username,
           city: userData.city,
           town: userData.town,
+          isLiked: userData.isLiked,
         });
       }
       router.push("/");
+      setIsButtonLoading(false);
     } catch (error: any) {
       console.error("Error:", error);
       toast({
@@ -79,11 +88,13 @@ export default function LoginConatinerPresenter() {
         duration: 5000, // Set the desired duration in milliseconds (e.g., 5000 for 5 seconds)
         isClosable: true,
       });
+      setIsButtonLoading(false);
     }
   };
 
   return (
     <LoginSignupForm
+      isButtonLoading={isButtonLoading}
       isSignup={false}
       onSubmit={onSubmit}
       handleGoole={signInWithGoogle}
