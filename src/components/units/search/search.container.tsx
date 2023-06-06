@@ -252,7 +252,9 @@ export default function SearchContainer() {
             next={fetchNextPage}
             hasMore={hasNextPage ?? false}
             loader={<CustomSpinner spinnerType="postListLoader" />}
-            endMessage={currentSearchQuery === "" ? null : <EndMessage />}
+            endMessage={
+              currentSearchQuery === "" || isLoading ? null : <EndMessage />
+            }
           >
             <VStack
               gap="1rem"
