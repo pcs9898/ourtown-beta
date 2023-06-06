@@ -1,10 +1,31 @@
-import { userState } from "@/src/commons/libraries/recoil/recoil";
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import {
+  searchQueryState,
+  userState,
+} from "@/src/commons/libraries/recoil/recoil";
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { Search } from "@mui/icons-material";
-import { useRecoilValue } from "recoil";
+import { useRouter } from "next/router";
+import { ChangeEvent, useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 export default function SearchBar() {
   const currentUser = useRecoilValue(userState);
+  const [currentSearchQuery, setCurrentSearchQuery] =
+    useRecoilState(searchQueryState);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const router = useRouter();
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!isMobile) {
+      router.push("/search");
+    }
+    setCurrentSearchQuery(e.target.value);
+  };
 
   return (
     <InputGroup
@@ -38,6 +59,8 @@ export default function SearchBar() {
       <Input
         variant="filled"
         placeholder={`Search near ${currentUser?.city}`}
+        onChange={handleInputChange}
+        value={currentSearchQuery}
       />
     </InputGroup>
   );

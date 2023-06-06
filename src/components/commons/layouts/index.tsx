@@ -6,7 +6,10 @@ import { useRouter } from "next/router";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { NotificationsNoneOutlined } from "@mui/icons-material";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { userState } from "@/src/commons/libraries/recoil/recoil";
+import {
+  searchQueryState,
+  userState,
+} from "@/src/commons/libraries/recoil/recoil";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/src/commons/libraries/firebase/firebase";
@@ -19,6 +22,7 @@ interface ILayoutsProps {
 export default function Layouts({ children }: ILayoutsProps) {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useRecoilState(userState);
+  const setCurrentSearchQuery = useSetRecoilState(searchQueryState);
   const isLoginSignupLayout =
     router.pathname === "/login" || router.pathname === "/signup";
   const [isloading, setIsloading] = useState(true);

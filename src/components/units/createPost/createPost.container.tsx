@@ -63,8 +63,7 @@ export default function CreatePostContainer({
         commentsId: newPost.commentsId;
       });
       setCurrentHeader({
-        mobileBackButton: true,
-        mobileSubTitle: `${currentUser?.username}'s Post`,
+        title: `${currentUser?.username}'s Post`,
       });
       router.push(`/posts/${result.id}`).then(() => {
         if (onClose) onClose();

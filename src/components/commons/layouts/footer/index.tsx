@@ -1,3 +1,4 @@
+import { headerState } from "@/src/commons/libraries/recoil/recoil";
 import { Box, Flex, HStack, IconButton, VStack } from "@chakra-ui/react";
 import {
   AccountCircleOutlined,
@@ -28,50 +29,52 @@ export default function FooterLayout() {
         zIndex="sticky"
         borderTop="1px solid #dbdbdb"
       >
-        <Link href="/">
-          <IconButton
-            icon={<HomeOutlined style={{ fontSize: "2rem" }} />}
-            aria-label="Home"
-            variant="ghost"
-            color={
-              pathname === "/" || pathname.includes("/posts/")
-                ? "teal"
-                : "black"
-            }
-          />
-        </Link>
-        <Link href="/search">
-          <IconButton
-            icon={<SearchOutlined style={{ fontSize: "2rem" }} />}
-            aria-label="Search"
-            variant="ghost"
-            color={pathname === "/search" ? "teal" : "black"}
-          />
-        </Link>
-        <Link href="/discover">
-          <IconButton
-            icon={<MapOutlined style={{ fontSize: "2rem" }} />}
-            aria-label="Discover"
-            variant="ghost"
-            color={pathname.startsWith("/discover") ? "teal" : "black"}
-          />
-        </Link>
-        <Link href="/chat">
-          <IconButton
-            icon={<ChatBubbleOutlineOutlined style={{ fontSize: "2rem" }} />}
-            aria-label="Messages"
-            variant="ghost"
-            color={pathname.startsWith("/chat") ? "teal" : "black"}
-          />
-        </Link>
-        <Link href="/me">
-          <IconButton
-            icon={<AccountCircleOutlined style={{ fontSize: "2rem" }} />}
-            aria-label="My Profile"
-            variant="ghost"
-            color={pathname.startsWith("/me") ? "teal" : "black"}
-          />
-        </Link>
+        <IconButton
+          icon={<HomeOutlined style={{ fontSize: "2rem" }} />}
+          aria-label="Home"
+          variant="ghost"
+          color={
+            pathname === "/" || pathname.includes("/posts/") ? "teal" : "black"
+          }
+          as={Link}
+          href="/"
+        />
+
+        <IconButton
+          icon={<SearchOutlined style={{ fontSize: "2rem" }} />}
+          aria-label="Search"
+          variant="ghost"
+          color={pathname === "/search" ? "teal" : "black"}
+          as={Link}
+          href="/search"
+        />
+
+        <IconButton
+          icon={<MapOutlined style={{ fontSize: "2rem" }} />}
+          aria-label="Discover"
+          variant="ghost"
+          color={pathname.startsWith("/discover") ? "teal" : "black"}
+          as={Link}
+          href="/discover"
+        />
+
+        <IconButton
+          icon={<ChatBubbleOutlineOutlined style={{ fontSize: "2rem" }} />}
+          aria-label="Messages"
+          variant="ghost"
+          color={pathname.startsWith("/chat") ? "teal" : "black"}
+          as={Link}
+          href="/chat"
+        />
+
+        <IconButton
+          icon={<AccountCircleOutlined style={{ fontSize: "2rem" }} />}
+          aria-label="My Profile"
+          variant="ghost"
+          color={pathname === "/me" ? "teal" : "black"}
+          as={Link}
+          href="/me"
+        />
       </Flex>
     </Box>
   );

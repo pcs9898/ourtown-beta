@@ -32,7 +32,12 @@ export default function PostDetailPresenter({
       {isLoadingComments ? (
         <h1>Loading Comments</h1>
       ) : (
-        <VStack width="100%" gap="0" mb={{ base: "4rem", md: "0" }}>
+        <VStack
+          width="100%"
+          gap="0"
+          mt={{ md: "0.75rem" }}
+          mb={{ base: "4rem", md: "0" }}
+        >
           {commentsData?.map((comment, _) => {
             return <CommentItem key={comment.id} commentItemData={comment} />;
           })}

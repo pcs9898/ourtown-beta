@@ -20,32 +20,28 @@ import {
   Settings,
 } from "@mui/icons-material";
 import SearchBar from "../../combine/searchBar";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
 import CustomPopover from "../../combine/customPopover";
 import { auth } from "@/src/commons/libraries/firebase/firebase";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { createIcon } from "@chakra-ui/icons";
-import { Icon } from "@chakra-ui/react";
 
 export default function HeaderLayout() {
-  const isMobile = useBreakpointValue({ base: true, md: false });
   const router = useRouter();
   const toast = useToast();
   const [currentUser, setCurrentUser] = useRecoilState(userState);
-  const [currentHeader, setCurrentHeader] = useRecoilState(headerState);
+  const currentHeader = useRecoilValue(headerState);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const pathname = router.pathname;
 
-  const LogoIcon = createIcon({
-    displayName: "LogoIcon",
-    viewBox: "0 0 24 24",
-    path: (
-      <path
-        fill="#319795"
-        d="M86.834,90.834H33.166c-2.209,0-4-1.791-4-4V61.5c0-1.013,0.384-1.988,1.076-2.729l28.06-30.066l-8.326-9.499   l-32.81,36.819v30.809c0,2.209-1.791,4-4,4s-4-1.791-4-4V54.502c0-0.981,0.361-1.929,1.014-2.661l36.834-41.336   c0.763-0.856,1.816-1.368,3.002-1.339c1.147,0.005,2.236,0.501,2.992,1.363l36.834,42.02c0.64,0.729,0.992,1.667,0.992,2.637   v31.648C90.834,89.043,89.043,90.834,86.834,90.834z M37.166,82.834h45.668V56.69L63.602,34.75L37.166,63.076V82.834z"
-      />
-    ),
-  });
+  const isHome = pathname === "/";
+  const isPostDetail = pathname.startsWith("/posts/");
+  const isSearch = pathname === "/search";
+  const isDiscover = pathname.startsWith("/discover");
+  const isChat = pathname.startsWith("/chat");
+  const isMe = pathname === "/me";
+  const isProfile = pathname.includes("/me") || pathname.includes("/profile");
 
   const handleLogout = async () => {
     try {
@@ -73,36 +69,6 @@ export default function HeaderLayout() {
     }
   };
 
-  const renderIconByOption = (option: string) => {
-    switch (option) {
-      case "notification":
-        return (
-          <IconButton aria-label="Notification Icon" variant="ghost">
-            <NotificationsNone />
-          </IconButton>
-        );
-      case "bookmark":
-        return (
-          <IconButton aria-label="Bookmark Icon" variant="ghost">
-            <BookmarkBorder />
-          </IconButton>
-        );
-      case "moreMenu":
-        return (
-          <IconButton aria-label="MoreHoriz Icon" variant="ghost">
-            <MoreHoriz />
-          </IconButton>
-        );
-      case "settings":
-        <IconButton aria-label="Settings Icon" variant="ghost">
-          <Settings />
-        </IconButton>;
-
-      default:
-        return null;
-    }
-  };
-
   return (
     <Flex
       as="header"
@@ -118,35 +84,60 @@ export default function HeaderLayout() {
       sx={{
         "@media (max-width: 32.3125rem)": {
           "::-webkit-scrollbar-thumb": {},
-          borderBottom: router.pathname === "/" ? "0" : "1px solid #dbdbdb",
+          borderBottom:
+            router.pathname === "/" || router.pathname === "/search"
+              ? "0"
+              : "1px solid #dbdbdb",
         },
       }}
     >
-      {isMobile && (
-        <>
-          {currentHeader?.mobileSelectButton && (
-            <Button colorScheme="teal" rightIcon={<KeyboardArrowDown />}>
+      <Flex w="100%" justifyContent="space-between" alignItems="center">
+        {!isMobile && (
+          <Flex gap="0.75rem">
+            <Button variant="ghost" p="0" as={Link} href="/">
+              <Image
+                src="/logo.svg"
+                alt="Logo Image"
+                minW="2.5rem"
+                h="2.5rem"
+              />
+            </Button>
+            <Button
+              size="md"
+              colorScheme="teal"
+              rightIcon={<KeyboardArrowDown />}
+            >
               {currentUser?.city}
             </Button>
-          )}
-          {currentHeader?.mobileBackButton && (
+          </Flex>
+        )}
+
+        {(isSearch || !isMobile) && <SearchBar />}
+
+        {isHome && isMobile && (
+          <>
+            <Button
+              justifySelf="flex-start"
+              colorScheme="teal"
+              rightIcon={<KeyboardArrowDown />}
+            >
+              {currentUser?.city}
+            </Button>
+            <IconButton aria-label="Notification Icon" variant="ghost">
+              <NotificationsNone />
+            </IconButton>
+          </>
+        )}
+        {isPostDetail && isMobile && (
+          <>
             <IconButton
               variant="ghost"
               aria-label="Back Button"
               icon={<ArrowBackIosNew />}
-              onClick={() => {
-                router.back();
-                setCurrentHeader({
-                  mobileSelectButton: true,
-                  mobileRightIcon: "notification",
-                });
-              }}
+              onClick={() =>
+                isMobile && !isPostDetail ? router.push("/") : router.back()
+              }
             />
-          )}
-          {currentHeader?.mobileMainTitle && (
-            <Heading h="2.5rem">{currentHeader.mobileMainTitle}</Heading>
-          )}
-          {currentHeader?.mobileSubTitle && (
             <Heading
               fontSize="1.25rem"
               textAlign="center"
@@ -157,41 +148,38 @@ export default function HeaderLayout() {
               margin="auto"
               zIndex="-1"
             >
-              {currentHeader.mobileSubTitle}
+              {currentHeader?.title}
             </Heading>
-          )}
-          {currentHeader?.mobileRightIcon &&
-            renderIconByOption(currentHeader.mobileRightIcon)}
+          </>
+        )}
+        {isDiscover && isMobile && (
+          <>
+            <Heading h="2.5rem">Discover</Heading>{" "}
+            <IconButton aria-label="Bookmark Icon" variant="ghost">
+              <BookmarkBorder />
+            </IconButton>{" "}
+          </>
+        )}
+        {isChat && isMobile && (
+          <>
+            <Heading h="2.5rem">Chats</Heading>
+            <IconButton aria-label="MoreHoriz Icon" variant="ghost">
+              <MoreHoriz />
+            </IconButton>{" "}
+          </>
+        )}
+        {isProfile && isMobile && (
+          <>
+            <Heading h="2.5rem">
+              {isMe ? currentUser?.username : currentHeader?.profileUserName}
+            </Heading>
+            <IconButton aria-label="Settings Icon" variant="ghost">
+              <Settings />
+            </IconButton>
+          </>
+        )}
 
-          {currentHeader?.mobileSearchBar && <SearchBar />}
-          {/* search deboucing apdated */}
-        </>
-      )}
-
-      {!isMobile && (
-        <Flex w="100%" justifyContent="space-between">
-          <Flex gap="0.75rem">
-            <Link href="/">
-              <Button variant="ghost" p="0">
-                <Image
-                  src="/logo.svg"
-                  alt="Logo Image"
-                  minW="2.5rem"
-                  h="2.5rem"
-                />
-              </Button>
-            </Link>
-
-            <Button
-              w="100%"
-              size="md"
-              colorScheme="teal"
-              rightIcon={<KeyboardArrowDown />}
-            >
-              {currentUser?.city}
-            </Button>
-          </Flex>
-          <SearchBar />
+        {!isMobile && (
           <Flex gap="0.75rem">
             <CustomPopover isNotifications={true}>hi</CustomPopover>
             <CustomPopover
@@ -201,8 +189,8 @@ export default function HeaderLayout() {
               <Button onClick={handleLogout}>로그아웃</Button>
             </CustomPopover>
           </Flex>
-        </Flex>
-      )}
+        )}
+      </Flex>
     </Flex>
   );
 }

@@ -1,9 +1,8 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import CustomTabs from "../../commons/combine/customTabs";
-import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
+import { userState } from "@/src/commons/libraries/recoil/recoil";
 import React, { useEffect, useState } from "react";
 import {
-  DocumentSnapshot,
   arrayRemove,
   arrayUnion,
   collection,
@@ -21,19 +20,8 @@ import {
 import { db } from "@/src/commons/libraries/firebase/firebase";
 import { useMutation, useInfiniteQuery } from "react-query";
 import PostItem from "../../commons/combine/postItem";
-import {
-  Box,
-  Flex,
-  Heading,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  Spinner,
-  VStack,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Box, Spinner, VStack, useMediaQuery } from "@chakra-ui/react";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
-import { Category } from "@mui/icons-material";
 import CustomModal from "../../commons/combine/customModal";
 import CreatePostContainer from "../createPost/createPost.container";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -43,17 +31,11 @@ import EndMessage from "../../commons/combine/endMessage";
 
 function PostListContainer() {
   const [category, setCategory] = useState("Daily");
-  const setCurrentHeader = useSetRecoilState(headerState);
   const [currentUser, setCurrentUser] = useRecoilState(userState);
   const [isMdScreen] = useMediaQuery("(min-width: 48em)");
   const defaultCategory = "Daily";
 
-  useEffect(() => {
-    setCurrentHeader({
-      mobileSelectButton: true,
-      mobileRightIcon: "notification",
-    });
-  }, []);
+  useEffect(() => {}, []);
 
   const onClickTab = async (newCategory: string) => {
     if (category !== newCategory) {
@@ -219,24 +201,7 @@ function PostListContainer() {
             next={fetchNextPage}
             hasMore={hasNextPage ?? false}
             // loader={<CustomSpinner spinnerType="postListLoader" />}
-            loader={
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                w="100%"
-                height="6rem"
-                mb="4rem"
-              >
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="main"
-                  size="xl"
-                />
-              </Box>
-            }
+            loader={<CustomSpinner spinnerType="postListLoader" />}
             endMessage={<EndMessage />}
           >
             <VStack
@@ -261,7 +226,6 @@ function PostListContainer() {
             <CreatePostContainer />
           </CustomModal>
         </>
-        //  {/* </Box> */}
       )}
     </>
   );

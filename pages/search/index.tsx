@@ -1,3 +1,5 @@
+import SearchContainer from "@/src/components/units/search/search.container";
+
 export default function PostDetailPage() {
-  return <h1>post detail page</h1>;
+  return <SearchContainer />;
 }

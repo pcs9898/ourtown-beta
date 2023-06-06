@@ -10,3 +10,8 @@ export const headerState = atom<IHeaderState | null>({
   key: "headerState",
   default: null,
 });
+
+export const searchQueryState = atom<string>({
+  key: "searchQueryState",
+  default: "",
+});

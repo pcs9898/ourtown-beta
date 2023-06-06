@@ -67,8 +67,7 @@ export default function PostItem({
 
   const onClickPostDetail = async () => {
     await setCurrentHeader({
-      mobileBackButton: true,
-      mobileSubTitle: `${username}'s Post`,
+      title: `${username}'s Post`,
     });
 
     router.push(`/posts/${id}`);

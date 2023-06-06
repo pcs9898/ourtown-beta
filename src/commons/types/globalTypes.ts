@@ -29,10 +29,6 @@ export interface IComment {
 }
 
 export interface IHeaderState {
-  mobileSelectButton?: boolean;
-  mobileRightIcon?: string;
-  mobileBackButton?: boolean;
-  mobileMainTitle?: string;
-  mobileSubTitle?: React.ReactElement | string;
-  mobileSearchBar?: boolean;
+  title?: string;
+  profileUserName?: string;
 }

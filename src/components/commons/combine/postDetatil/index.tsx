@@ -60,7 +60,12 @@ export default function PostDetail({
   const currentUser = useRecoilValue(userState);
 
   return (
-    <Box position="sticky" top="3.5rem" zIndex={1200} bgColor="white">
+    <Box
+      position="sticky"
+      top={{ base: "3.5rem", md: "4.125rem" }}
+      zIndex={1200}
+      bgColor="white"
+    >
       <Card mb="2px" boxShadow="md">
         <CardHeader display="flex" px="1rem" py="0.75rem">
           <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">

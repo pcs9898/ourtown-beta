@@ -16,11 +16,13 @@
     "@hookform/resolvers": "^3.1.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.3",
+    "@types/lodash": "^4.14.195",
     "@types/node": "20.1.0",
     "axios": "^1.4.0",
     "dotenv": "^16.0.3",
     "firebase": "^9.22.1",
     "framer-motion": "^10.12.8",
+    "loadsh": "^0.0.4",
     "moment": "^2.29.4",
     "next": "13.4.1",
     "react": "18.2.0",
@@ -30,6 +32,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-query": "^3.39.3",
     "recoil": "^0.7.7",
+    "use-debounce": "^9.0.4",
     "yup": "^1.2.0"
   },
   "devDependencies": {

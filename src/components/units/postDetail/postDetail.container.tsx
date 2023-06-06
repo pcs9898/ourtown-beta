@@ -70,8 +70,7 @@ export default function PostDetailContainer() {
           }
 
           setCurrentHeader({
-            mobileBackButton: true,
-            mobileSubTitle: `${userData.username}'s Post`,
+            title: `${userData.username}'s Post`,
           });
 
           return { postData, userData, commentsData };

@@ -42,7 +42,7 @@
 [x] create post
 [x] post detail
 [x] post list
-[ ] search
+[x] search
 [ ] me
 [ ] profile detail
 [ ] edit profile

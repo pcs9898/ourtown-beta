@@ -10,6 +10,8 @@ import Link from "next/link";
 import CustomModal from "../../../combine/customModal";
 import CreatePostContainer from "@/src/components/units/createPost/createPost.container";
 import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
+import { headerState } from "@/src/commons/libraries/recoil/recoil";
 
 const NavButton = styled(Button)`
   font-size: 1.125rem;
@@ -31,6 +33,7 @@ NavButton.defaultProps = {
 export default function NavLayout() {
   const router = useRouter();
   const pathname = router.pathname;
+  const setCurrentHeader = useSetRecoilState(headerState);
 
   return (
     <VStack
@@ -47,34 +50,34 @@ export default function NavLayout() {
       h="100%"
     >
       <NavButton
-        as={Link}
-        href="/"
         color={
           pathname === "/" || pathname.includes("/posts/") ? "teal" : "black"
         }
+        as={Link}
+        href="/"
       >
         <HomeOutlined />
         Home
       </NavButton>
 
       <NavButton
+        color={pathname.startsWith("/discover") ? "teal" : "black"}
         as={Link}
         href="/discover"
-        color={pathname.startsWith("/discover") ? "teal" : "black"}
       >
         <MapOutlined />
         Discover
       </NavButton>
       <NavButton
+        color={pathname.startsWith("/chat") ? "teal" : "black"}
         as={Link}
         href="/chat"
-        color={pathname.startsWith("/chat") ? "teal" : "black"}
       >
         <ChatBubbleOutline />
         Chats
       </NavButton>
 
-      <CustomModal buttonContent="Post" isFixSize={true}>
+      <CustomModal isFixSize={true}>
         <CreatePostContainer />
       </CustomModal>
     </VStack>
