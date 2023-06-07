@@ -225,15 +225,13 @@ export default function PostDetailContainer() {
 
   return isLoading ? (
     <CustomSkeleton skeletonType="postDetail" />
-  ) : (
-    data && (
-      <PostDetailPresenter
-        postData={data?.postData}
-        userData={data?.userData}
-        commentsData={data?.commentsData}
-        createComment={createComment}
-        toggleLikePost={toggleLikePost}
-      />
-    )
-  );
+  ) : data ? (
+    <PostDetailPresenter
+      postData={data?.postData}
+      userData={data?.userData}
+      commentsData={data?.commentsData}
+      createComment={createComment}
+      toggleLikePost={toggleLikePost}
+    />
+  ) : null;
 }

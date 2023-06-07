@@ -1,9 +1,5 @@
 import { auth, db } from "@/src/commons/libraries/firebase/firebase";
-import {
-  isLoadingState,
-  isLoggedInState,
-  userState,
-} from "@/src/commons/libraries/recoil/recoil";
+import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -15,8 +11,6 @@ interface IRouteGuardProps {
 }
 
 export default function RouteGuard({ children }: IRouteGuardProps) {
-  const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
   const setUserState = useSetRecoilState(userState);
   const router = useRouter();
 

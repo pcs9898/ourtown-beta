@@ -45,6 +45,7 @@ export default function Layouts({ children }: ILayoutsProps) {
               town: userData.town,
               likedPosts: userData.likedPosts,
               likedDiscovers: userData.likedDiscovers,
+              friends: userData.friends,
             });
 
             setIsloading(false);

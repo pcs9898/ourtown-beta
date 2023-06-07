@@ -10,6 +10,7 @@ import {
   useBreakpointValue,
   useToast,
   LinkOverlay,
+  Text,
 } from "@chakra-ui/react";
 import {
   ArrowBackIosNew,
@@ -41,7 +42,7 @@ export default function HeaderLayout() {
   const isDiscover = pathname.startsWith("/discover");
   const isChat = pathname.startsWith("/chat");
   const isMe = pathname === "/me";
-  const isProfile = pathname.includes("/me") || pathname.includes("/profile");
+  const isProfile = pathname.includes("/profile");
 
   const handleLogout = async () => {
     try {
@@ -85,9 +86,9 @@ export default function HeaderLayout() {
         "@media (max-width: 32.3125rem)": {
           "::-webkit-scrollbar-thumb": {},
           borderBottom:
-            router.pathname === "/" || router.pathname === "/search"
-              ? "0"
-              : "1px solid #dbdbdb",
+            pathname === "/discover" || pathname === "/chat"
+              ? "1px solid #dbdbdb"
+              : "0",
         },
       }}
     >
@@ -154,7 +155,9 @@ export default function HeaderLayout() {
         )}
         {isDiscover && isMobile && (
           <>
-            <Heading h="2.5rem">Discover</Heading>{" "}
+            <Heading fontSize="1.5rem" alignSelf="center">
+              Discover
+            </Heading>{" "}
             <IconButton aria-label="Bookmark Icon" variant="ghost">
               <BookmarkBorder />
             </IconButton>{" "}
@@ -162,20 +165,52 @@ export default function HeaderLayout() {
         )}
         {isChat && isMobile && (
           <>
-            <Heading h="2.5rem">Chats</Heading>
+            <Heading fontSize="1.5rem" alignSelf="center">
+              Chats
+            </Heading>
             <IconButton aria-label="MoreHoriz Icon" variant="ghost">
               <MoreHoriz />
             </IconButton>{" "}
           </>
         )}
-        {isProfile && isMobile && (
+        {isMe && isMobile && (
           <>
-            <Heading h="2.5rem">
-              {isMe ? currentUser?.username : currentHeader?.profileUserName}
-            </Heading>
+            <Flex fontSize="1.5rem" gap="0.25rem" alignItems="center">
+              <Heading fontSize="1.5rem" alignSelf="center">
+                {currentUser?.username}
+              </Heading>{" "}
+              <Text fontSize="1.5rem" color="subText">
+                ‧
+              </Text>
+              <Text fontSize="1.25rem" color="subText">
+                {currentUser?.town}
+              </Text>
+            </Flex>
             <IconButton aria-label="Settings Icon" variant="ghost">
               <Settings />
             </IconButton>
+          </>
+        )}
+        {isProfile && isMobile && (
+          <>
+            <IconButton
+              variant="ghost"
+              aria-label="Back Button"
+              icon={<ArrowBackIosNew />}
+              onClick={() => router.back()}
+            />
+            <Heading
+              fontSize="1.25rem"
+              textAlign="center"
+              position="absolute"
+              width="100%"
+              left="0"
+              right="0"
+              margin="auto"
+              zIndex="-1"
+            >
+              {currentHeader?.profileUserName}`s Profile
+            </Heading>
           </>
         )}
 

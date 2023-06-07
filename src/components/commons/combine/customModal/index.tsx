@@ -18,12 +18,20 @@ interface ICustomModalProps {
   children: ReactNode;
   isFixSize: boolean;
   isButtonHideMdScreen?: boolean;
+  isCreatePost?: boolean;
+  isFriendsList?: boolean;
+  isEditProfile?: boolean;
+  buttonText?: string;
 }
 
 export default function CustomModal({
   children,
   isFixSize,
   isButtonHideMdScreen = false,
+  isCreatePost,
+  isEditProfile,
+  isFriendsList,
+  buttonText,
 }: ICustomModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,7 +41,7 @@ export default function CustomModal({
 
   return (
     <>
-      {!isButtonHideMdScreen && (
+      {!isButtonHideMdScreen && isCreatePost && (
         <Button
           fontSize="1.125rem"
           leftIcon={<AddOutlined />}
@@ -48,7 +56,8 @@ export default function CustomModal({
           Post
         </Button>
       )}
-
+      {isFriendsList && <Button onClick={onOpen}>{buttonText}</Button>}
+      {isEditProfile && <Button onClick={onOpen}>Edit Profile</Button>}
       <Modal isOpen={isOpen} onClose={onClose} motionPreset="none">
         <ModalOverlay />
 

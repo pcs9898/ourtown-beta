@@ -74,6 +74,7 @@ export default function SignupContainerPresenter() {
         town,
         likedPosts: [],
         likedDiscovers: [],
+        friends: [],
       });
 
       await setUserState({
@@ -84,6 +85,7 @@ export default function SignupContainerPresenter() {
         town,
         likedPosts: [],
         likedDiscovers: [],
+        friends: [],
       });
       router.push("/");
       setIsButtonLoading(false);
@@ -124,6 +126,7 @@ export default function SignupContainerPresenter() {
         town,
         likedPosts: [],
         likedDiscovers: [],
+        friends: [],
       });
 
       if (username) {
@@ -135,6 +138,7 @@ export default function SignupContainerPresenter() {
           town,
           likedPosts: [],
           likedDiscovers: [],
+          friends: [],
         });
       }
 

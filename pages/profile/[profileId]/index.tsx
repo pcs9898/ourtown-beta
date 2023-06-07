@@ -1,3 +1,5 @@
+import ProfileDetailContainer from "@/src/components/units/profileDetail/profileDetail.container";
+
 export default function ProfileDetailPage() {
-  return <h1>profile detail page</h1>;
+  return <ProfileDetailContainer />;
 }

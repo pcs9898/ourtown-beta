@@ -58,7 +58,6 @@ export default function CreatePostPresenter({
           >
             Post
           </Button>
-          {/* mutation link */}
         </Flex>
       </ModalHeader>
       <ModalBody

@@ -1,5 +1,12 @@
-import { headerState } from "@/src/commons/libraries/recoil/recoil";
-import { Box, Flex, HStack, IconButton, VStack } from "@chakra-ui/react";
+import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
+import {
+  Avatar,
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  VStack,
+} from "@chakra-ui/react";
 import {
   AccountCircleOutlined,
   ChatBubbleOutlineOutlined,
@@ -9,10 +16,12 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
 
 export default function FooterLayout() {
   const router = useRouter();
   const pathname = router.pathname;
+  const currentUser = useRecoilValue(userState);
 
   return (
     <Box as="footer" display={{ md: "none" }}>
@@ -67,11 +76,10 @@ export default function FooterLayout() {
           href="/chat"
         />
 
-        <IconButton
-          icon={<AccountCircleOutlined style={{ fontSize: "2rem" }} />}
-          aria-label="My Profile"
-          variant="ghost"
-          color={pathname === "/me" ? "teal" : "black"}
+        <Avatar
+          src={currentUser?.avatarUrl}
+          name={currentUser?.username}
+          boxSize="2rem"
           as={Link}
           href="/me"
         />

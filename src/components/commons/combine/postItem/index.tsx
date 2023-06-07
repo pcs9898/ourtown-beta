@@ -1,3 +1,4 @@
+import { db } from "@/src/commons/libraries/firebase/firebase";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
 import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
 import formatTimeAgo from "@/src/commons/utils/formatTimgAgo";
@@ -24,7 +25,7 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 interface IPostItemProps {
   postItemData: {
@@ -36,6 +37,7 @@ interface IPostItemProps {
     content: string;
     imageUrl: string;
     uid: string;
+    category: string;
     user: {
       id: string;
       avatarUrl: string;
@@ -51,7 +53,7 @@ export default function PostItem({
   toggleLikePost,
 }: IPostItemProps) {
   const {
-    id,
+    id: postId,
     town,
     createdAt,
     likeCount,
@@ -59,9 +61,11 @@ export default function PostItem({
     content,
     uid,
     imageUrl,
+    category,
     user: { avatarUrl, username },
   } = postItemData;
-  const currentUser = useRecoilValue(userState);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
+
   const setCurrentHeader = useSetRecoilState(headerState);
   const router = useRouter();
 
@@ -70,18 +74,27 @@ export default function PostItem({
       title: `${username}'s Post`,
     });
 
-    router.push(`/posts/${id}`);
+    router.push(`/posts/${postId}`);
   };
 
   return (
-    <Card width="100%" boxShadow="md">
+    <Card width="100%">
       <CardHeader display="flex" px="1rem" py="0.75rem">
         <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">
           <Avatar
-            as={Link}
-            href={`/profile/${uid}`}
+            cursor="pointer"
             name={username}
             src={avatarUrl}
+            onClick={() => {
+              if (uid !== currentUser?.uid) {
+                setCurrentHeader({
+                  profileUserName: username,
+                });
+                router.push(`/profile/${uid}`);
+              } else {
+                router.push("/me");
+              }
+            }}
           />
 
           <Box>
@@ -141,13 +154,13 @@ export default function PostItem({
         <Button
           variant="ghost"
           leftIcon={
-            currentUser?.likedPosts?.includes(id) ? (
+            currentUser?.likedPosts?.includes(postId) ? (
               <Favorite />
             ) : (
               <FavoriteBorder />
             )
           }
-          onClick={() => toggleLikePost(id)}
+          onClick={() => toggleLikePost(postId)}
         >
           {" "}
           {likeCount}

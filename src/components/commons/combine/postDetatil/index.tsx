@@ -22,8 +22,9 @@ import {
 import AddCommentOrReview from "../formInput";
 import Link from "next/link";
 import formatTimeAgo from "@/src/commons/utils/formatTimgAgo";
-import { useRecoilValue } from "recoil";
-import { userState } from "@/src/commons/libraries/recoil/recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
+import { useRouter } from "next/router";
 
 interface IPostDetailProps {
   postData: {
@@ -58,7 +59,8 @@ export default function PostDetail({
     postData;
   const { username, avatarUrl } = userData;
   const currentUser = useRecoilValue(userState);
-
+  const setCurrentHeader = useSetRecoilState(headerState);
+  const router = useRouter();
   return (
     <Box
       position="sticky"
@@ -66,11 +68,25 @@ export default function PostDetail({
       zIndex={1200}
       bgColor="white"
     >
-      <Card mb="2px" boxShadow="md">
+      <Card mb="2px">
         <CardHeader display="flex" px="1rem" py="0.75rem">
           <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">
-            <Link href={`/profile/${uid}`}>
-              <Avatar name={username} src={avatarUrl} />
+            <Link href={uid === currentUser?.uid ? "/me" : `/profile/${uid}`}>
+              <Avatar
+                cursor="pointer"
+                name={username}
+                src={avatarUrl}
+                onClick={() => {
+                  if (uid !== currentUser?.uid) {
+                    setCurrentHeader({
+                      profileUserName: username,
+                    });
+                    router.push(`/profile/${uid}`);
+                  } else {
+                    router.push("/me");
+                  }
+                }}
+              />
             </Link>
             <Box>
               <Flex gap="0.25rem">

@@ -77,7 +77,7 @@ export default function NavLayout() {
         Chats
       </NavButton>
 
-      <CustomModal isFixSize={true}>
+      <CustomModal isFixSize={true} isCreatePost={true}>
         <CreatePostContainer />
       </CustomModal>
     </VStack>

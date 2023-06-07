@@ -6,6 +6,7 @@ import {
   useBreakpointValue,
   useTheme,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 import React, { ReactNode } from "react";
 
@@ -16,7 +17,8 @@ interface ICustomTabsProps {
     | "mainCategory"
     | "dicoverBigCategory"
     | "discoverSmallRestaurantCategory"
-    | "profileCategory";
+    | "profileCategory"
+    | "meProfileCategory";
 }
 
 function CustomTabs({
@@ -28,6 +30,7 @@ function CustomTabs({
     base: 0,
     "32.3125rem": "0.1rem",
   });
+  const router = useRouter();
 
   const handleClickTab = (tab: string = "Daily") => {
     onClickTab(tab);
@@ -63,8 +66,10 @@ function CustomTabs({
           "Snacks",
           "Japanese",
         ];
+      case "meProfileCategory":
+        return ["Posts", "Liked", "Saved"];
       case "profileCategory":
-        return ["My Posts", "Liked Posts", "Bookmarked Places"];
+        return ["Posts"];
       default:
         return ["hi"];
     }
@@ -94,7 +99,11 @@ function CustomTabs({
           "@media (min-width: 32.3125rem)": {
             "&:hover": {
               "::-webkit-scrollbar": {
-                display: "initial",
+                display:
+                  router.pathname.includes("/profile/") ||
+                  router.pathname === "/me"
+                    ? "none"
+                    : "initial",
                 height: "5px",
                 borderRadius: "50px",
               },
@@ -112,7 +121,10 @@ function CustomTabs({
       >
         <TabList
           mx={isCreatePost ? "0rem" : "1rem"}
-          mt={{ base: "0.1rem", md: "0.5rem" }}
+          mt={{
+            base: "0.1rem",
+            md: router.pathname.includes("/profile/") ? "0.1rem" : "0.5rem",
+          }}
           mb={{ base: "0.4rem", md: "0.5rem" }}
           pt="0.1rem"
         >
