@@ -1,6 +1,9 @@
 import { Box, Heading } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 export default function EndMessage() {
+  const { t } = useTranslation();
+
   return (
     <Box
       display="flex"
@@ -10,7 +13,7 @@ export default function EndMessage() {
       height="6rem"
       mb="4rem"
     >
-      <Heading size="md">No More Post</Heading>
+      <Heading size="md">{t("endMessage")}</Heading>
     </Box>
   );
 }

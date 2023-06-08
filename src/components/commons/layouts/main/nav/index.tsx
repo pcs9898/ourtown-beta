@@ -12,6 +12,7 @@ import CreatePostContainer from "@/src/components/units/createPost/createPost.co
 import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 import { headerState } from "@/src/commons/libraries/recoil/recoil";
+import { useTranslation } from "react-i18next";
 
 const NavButton = styled(Button)`
   font-size: 1.125rem;
@@ -37,6 +38,8 @@ export default function NavLayout() {
   const inactiveIconColor = useColorModeValue("gray.800", "#EEEFF1");
   const activeIconColor = useColorModeValue("teal.500", "teal.200");
 
+  const { t } = useTranslation();
+
   return (
     <VStack
       as="nav"
@@ -61,7 +64,7 @@ export default function NavLayout() {
         href="/"
       >
         <HomeOutlined />
-        Home
+        {t("pcNavHome")}
       </NavButton>
 
       <NavButton
@@ -72,7 +75,7 @@ export default function NavLayout() {
         href="/discover"
       >
         <MapOutlined />
-        Discover
+        {t("pcNavDiscover")}
       </NavButton>
       <NavButton
         color={
@@ -82,7 +85,7 @@ export default function NavLayout() {
         href="/chat"
       >
         <ChatBubbleOutline />
-        Chats
+        {t("pcNavChats")}
       </NavButton>
 
       <CustomModal isFixSize={true} isCreatePost={true}>

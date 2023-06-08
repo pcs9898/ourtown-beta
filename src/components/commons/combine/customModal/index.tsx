@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { AddOutlined, ArrowBackIosNew, Settings } from "@mui/icons-material";
 import { ReactNode, cloneElement } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ICustomModalProps {
   children: ReactNode;
@@ -36,6 +37,7 @@ export default function CustomModal({
   buttonText,
 }: ICustomModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { t } = useTranslation();
 
   const childrenWithProps = cloneElement(children as React.ReactElement, {
     onClose: onClose, // 전달할 props 추가
@@ -55,11 +57,13 @@ export default function CustomModal({
           float="right"
           right="0.5rem"
         >
-          Post
+          {t("postButton")}
         </Button>
       )}
       {isFriendsList && <Button onClick={onOpen}>{buttonText}</Button>}
-      {isEditProfile && <Button onClick={onOpen}>Edit Profile</Button>}
+      {isEditProfile && (
+        <Button onClick={onOpen}>{t("editProfileButton")}</Button>
+      )}
       {isSettings && (
         <IconButton
           aria-label="Settings Icon"

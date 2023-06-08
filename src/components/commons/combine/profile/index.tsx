@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import CustomModal from "../customModal";
 import FriendsListContainer from "@/src/components/units/friendsList/friendsList.container";
 import EditProfileContainer from "@/src/components/units/editProfile/editProfile.container";
+import { useTranslation } from "react-i18next";
 
 interface IProfileProps {
   profileData: {
@@ -35,6 +36,7 @@ export default function Profile({
   const { avatarUrl, username, town, friends, id } = profileData;
   const currentUser = useRecoilValue(userState);
   const backgroundColor = useColorModeValue("white", "gray.800");
+  const { t } = useTranslation();
 
   return (
     <Flex
@@ -80,7 +82,9 @@ export default function Profile({
                 isFixSize={false}
                 isFriendsList={true}
                 buttonText={
-                  friends.length + (friends.length > 1 ? " friends" : " friend")
+                  friends.length +
+                  " " +
+                  (friends.length > 1 ? t("friendButton") : t("friendsButton"))
                 }
               >
                 <FriendsListContainer />
@@ -92,16 +96,16 @@ export default function Profile({
             <>
               {currentUser?.friends.includes(id) ? (
                 <Button colorScheme="red" onClick={() => unFriend(id)}>
-                  UnFriend
+                  {t("unfriendButton")}
                 </Button>
               ) : (
                 // unfriend mutation
                 <Button colorScheme="teal" onClick={() => addFriend(id)}>
-                  Add Friend
+                  {t("addFriendButton")}
                 </Button>
                 // addFriend mutation
               )}
-              <Button colorScheme="teal">Message</Button>
+              <Button colorScheme="teal">{t("messageButton")}</Button>
               {/* chatDetail Link packaging */}
             </>
           )}

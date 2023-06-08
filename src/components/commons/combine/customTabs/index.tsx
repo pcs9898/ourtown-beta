@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-
+import { useTranslation } from "react-i18next";
 import React, { ReactNode } from "react";
 
 interface ICustomTabsProps {
@@ -37,9 +37,36 @@ function CustomTabs({
   const backgroundColor = useColorModeValue("white", "gray.800");
   const borderBottomColor = useColorModeValue("#dbdbdb", "none");
   const { colorMode } = useColorMode();
+  const { t, i18n } = useTranslation();
 
   const handleClickTab = (tab: string = "Daily") => {
     onClickTab(tab);
+  };
+
+  const getLanguageCategoryOptions = (ccategoryKindOptions: string) => {
+    switch (categoryKindOptions) {
+      case "mainCategory":
+        return [
+          t("mainCategoryTab1"),
+          t("mainCategoryTab2"),
+          t("mainCategoryTab3"),
+          t("mainCategoryTab4"),
+          t("mainCategoryTab5"),
+          t("mainCategoryTab6"),
+          t("mainCategoryTab7"),
+        ];
+      case "meProfileCategory":
+        return [
+          t("meProfileCategoryTab1"),
+          t("meProfileCategoryTab2"),
+          t("meProfileCategoryTab3"),
+        ];
+      case "profileCategory":
+        return [t("mainCategoryTab2")];
+
+      default:
+        return [];
+    }
   };
 
   const getCategoryOptions = (categoryKindOptions: string): string[] => {
@@ -76,8 +103,6 @@ function CustomTabs({
         return ["Posts", "Liked", "Saved"];
       case "profileCategory":
         return ["Posts"];
-      case "languageSettings":
-        return ["English", "Korean"];
       default:
         return ["hi"];
     }
@@ -138,6 +163,7 @@ function CustomTabs({
           }}
           mb={{ base: "0.4rem", md: "0.5rem" }}
           pt="0.1rem"
+          display="flex"
         >
           {getCategoryOptions(categoryKindOptions).map((tab, index) => (
             <Tab
@@ -145,8 +171,11 @@ function CustomTabs({
               fontWeight="semibold"
               key={index}
               onClick={() => handleClickTab(tab)}
+              sx={{
+                whiteSpace: "nowrap", // 줄바꿈 방지
+              }}
             >
-              {tab}
+              {getLanguageCategoryOptions(categoryKindOptions)[index]}
             </Tab>
           ))}
         </TabList>

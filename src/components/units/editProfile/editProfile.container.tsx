@@ -23,6 +23,7 @@ import { app, db } from "@/src/commons/libraries/firebase/firebase";
 import { useRouter } from "next/router";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { IUser } from "@/src/commons/types/globalTypes";
+import { useTranslation } from "react-i18next";
 
 interface IEditProfileContainer {
   onClose?: () => void;
@@ -38,6 +39,7 @@ export default function EditProfileContainer({
   const [currentUser, setCurrentUser] = useRecoilState(userState);
   const router = useRouter();
   const toast = useToast();
+  const { t } = useTranslation();
 
   const onClickSubmit = async () => {
     setIsButtonLoading(true);
@@ -162,7 +164,7 @@ export default function EditProfileContainer({
             right="0"
             margin="auto"
           >
-            Edit Profile
+            {t("editProfileTitle")}
           </Heading>
           <Button
             colorScheme="teal"
@@ -170,7 +172,7 @@ export default function EditProfileContainer({
             isLoading={isButtonLoading}
             isDisabled={!previewImage && !username}
           >
-            Save
+            {t("saveButton")}
           </Button>
         </Flex>
       </ModalHeader>
@@ -229,7 +231,7 @@ export default function EditProfileContainer({
         </Flex>
         <Input
           color="gray"
-          placeholder="Username"
+          placeholder={t("Username") ?? "Username"}
           variant="filled"
           onChange={(e) => setUsername(e.target.value)}
         />

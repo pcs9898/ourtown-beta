@@ -2,6 +2,7 @@ import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { Avatar, Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 
 interface IFriendItemProps {
   friendItemData: {
@@ -22,6 +23,7 @@ export default function FriendItem({
   const { username, avatarUrl, town, id } = friendItemData;
   const currentUser = useRecoilValue(userState);
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <Flex flexDirection="row" alignItems="center" py="0.75rem" w="100%">
@@ -49,16 +51,16 @@ export default function FriendItem({
         {/* avatar, box link(userDetail로 이동) packaging */}
       </Flex>
       <Flex gap="0.5rem">
-        <Button colorScheme="teal">Message</Button>
+        <Button colorScheme="teal">{t("messageButton")}</Button>
         {/* link(chatDetail) packaging */}
         {currentUser?.friends.includes(id) ? (
           <Button colorScheme="red" onClick={() => unFriend(id)}>
-            UnFriend
+            {t("unfriendButton")}
           </Button>
         ) : (
           // unfriend mutation
           <Button colorScheme="teal" onClick={() => addFriend(id)}>
-            Add Friend
+            {t("addFriendButton")}
           </Button>
           // addFriend mutation
         )}

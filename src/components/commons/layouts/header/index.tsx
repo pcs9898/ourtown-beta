@@ -30,6 +30,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import CustomModal from "../../combine/customModal";
 import SettingsConatiner from "@/src/components/units/settrings";
+import { useTranslation } from "react-i18next";
 
 export default function HeaderLayout() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function HeaderLayout() {
   const pathname = router.pathname;
   const backgroundColor = useColorModeValue("white", "gray.800");
   const borderBottomColor = useColorModeValue("#dbdbdb", "none");
+  const { t } = useTranslation();
 
   const isHome = pathname === "/";
   const isPostDetail = pathname.startsWith("/posts/");
@@ -161,7 +163,7 @@ export default function HeaderLayout() {
         {isDiscover && isMobile && (
           <>
             <Heading fontSize="1.5rem" alignSelf="center">
-              Discover
+              {t("mobileHeaderDiscover")}
             </Heading>{" "}
             <IconButton aria-label="Bookmark Icon" variant="ghost">
               <BookmarkBorder />
@@ -171,7 +173,7 @@ export default function HeaderLayout() {
         {isChat && isMobile && (
           <>
             <Heading fontSize="1.5rem" alignSelf="center">
-              Chats
+              {t("mobileHeaderChats")}
             </Heading>
             <IconButton aria-label="MoreHoriz Icon" variant="ghost">
               <MoreHoriz />

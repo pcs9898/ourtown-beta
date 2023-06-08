@@ -11,8 +11,8 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { ArrowBackIosNew } from "@mui/icons-material";
-import CustomTabs from "../../commons/combine/customTabs";
 import { ChangeEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ISettingsConatiner {
   onClose?: () => void;
@@ -21,12 +21,10 @@ interface ISettingsConatiner {
 export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
   const [selectedTab, setSelectedTab] = useState("Eng");
   const { colorMode, toggleColorMode } = useColorMode();
-  //   const onClickTab = (tabName: string) => {
-
-  //   };
+  const { t, i18n } = useTranslation();
 
   const onClickTab = (tab: string) => {
-    console.log(tab);
+    i18n.changeLanguage(tab).then(() => localStorage.setItem("language", tab));
   };
 
   const handleColorModeSwitch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +55,7 @@ export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
             right="0"
             margin="auto"
           >
-            Settings
+            {t("settingsTitle")}
           </Heading>
         </Flex>
       </ModalHeader>
@@ -85,7 +83,7 @@ export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
       >
         <VStack>
           <Flex w="100%" justifyContent="space-between" alignItems="center">
-            <Heading fontSize="1.125rem">Dark Mode</Heading>
+            <Heading fontSize="1.125rem">{t("darkmodeMenu")}</Heading>
             <Switch
               size="lg"
               colorScheme="teal"
@@ -94,13 +92,18 @@ export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
             />
           </Flex>
           <Flex w="100%" justifyContent="space-between" alignItems="center">
-            <Heading fontSize="1.125rem">Language</Heading>
-            <Tabs display="flex" colorScheme="teal" variant="solid-rounded">
-              <Tab borderRadius="base" onClick={() => onClickTab("Eng")}>
-                Eng
+            <Heading fontSize="1.125rem">{t("languagueMenu")}</Heading>
+            <Tabs
+              defaultIndex={i18n.language === "en" ? 0 : 1}
+              display="flex"
+              colorScheme="teal"
+              variant="solid-rounded"
+            >
+              <Tab borderRadius="base" onClick={() => onClickTab("en")}>
+                {t("languagueMenu1")}
               </Tab>
-              <Tab borderRadius="base" onClick={() => onClickTab("Kor")}>
-                Kor
+              <Tab borderRadius="base" onClick={() => onClickTab("ko")}>
+                {t("languagueMenu2")}
               </Tab>
             </Tabs>
           </Flex>

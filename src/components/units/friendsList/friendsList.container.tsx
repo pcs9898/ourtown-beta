@@ -24,6 +24,7 @@ import {
 import { useMutation, useQuery } from "react-query";
 import { useRecoilState } from "recoil";
 import FriendItem from "../../commons/combine/friendItem";
+import { useTranslation } from "react-i18next";
 
 interface IFriendsListContainer {
   onClose?: () => void;
@@ -37,6 +38,7 @@ export default function FriendsListContainer({
     base: "100%",
     "32.3125rem": "20vh",
   });
+  const { t } = useTranslation();
 
   const addFriendMutation = useMutation(
     async (uid: string) => {
@@ -136,7 +138,6 @@ export default function FriendsListContainer({
     fetchFriendsList()
   );
 
-  console.log(data);
   return (
     <>
       <ModalHeader p="0">
@@ -158,7 +159,7 @@ export default function FriendsListContainer({
             right="0"
             margin="auto"
           >
-            Friends
+            {t("friendsListTitle")}
           </Heading>
         </Flex>
       </ModalHeader>

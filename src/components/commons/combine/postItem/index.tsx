@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useTranslation } from "react-i18next";
 
 interface IPostItemProps {
   postItemData: {
@@ -70,10 +71,11 @@ export default function PostItem({
   const authorFontColor = useColorModeValue("white", "#1B212D");
   const setCurrentHeader = useSetRecoilState(headerState);
   const router = useRouter();
+  const { t } = useTranslation();
 
   const onClickPostDetail = async () => {
     await setCurrentHeader({
-      title: `${username}'s Post`,
+      title: `${username}${t("postDetailHeaderTitle")}`,
     });
 
     router.push(`/posts/${postId}`);

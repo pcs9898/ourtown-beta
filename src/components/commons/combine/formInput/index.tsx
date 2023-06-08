@@ -3,6 +3,7 @@ import { Avatar, Button, Flex, FormControl, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useTranslation } from "react-i18next";
 
 interface IFormInputProps {
   isComment: boolean;
@@ -14,6 +15,8 @@ export default function FormInput({ isComment, onSubmit }: IFormInputProps) {
   const [content, setContent] = useState("");
   const setCurrentHeader = useSetRecoilState(headerState);
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   console.log(currentUser);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,14 +51,18 @@ export default function FormInput({ isComment, onSubmit }: IFormInputProps) {
       />
       <Input
         variant="filled"
-        placeholder={isComment ? "Add a comment" : "Write a review"}
+        placeholder={
+          isComment
+            ? t("formInputaddCommnet") ?? "Add a comment"
+            : "Write a review"
+        }
         fontWeight="semibold"
         color="gray"
         value={content}
         onChange={handleInputChange}
       />
       <Button colorScheme="teal" flex="none" onClick={handleFormSubmit}>
-        {isComment ? "Comment" : "Review"}
+        {isComment ? t("commentButton") : "Review"}
       </Button>
     </FormControl>
   );
