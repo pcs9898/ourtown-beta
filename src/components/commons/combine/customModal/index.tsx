@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AddOutlined, ArrowBackIosNew } from "@mui/icons-material";
+import { AddOutlined, ArrowBackIosNew, Settings } from "@mui/icons-material";
 import { ReactNode, cloneElement } from "react";
 
 interface ICustomModalProps {
@@ -21,6 +21,7 @@ interface ICustomModalProps {
   isCreatePost?: boolean;
   isFriendsList?: boolean;
   isEditProfile?: boolean;
+  isSettings?: boolean;
   buttonText?: string;
 }
 
@@ -31,6 +32,7 @@ export default function CustomModal({
   isCreatePost,
   isEditProfile,
   isFriendsList,
+  isSettings,
   buttonText,
 }: ICustomModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,6 +60,16 @@ export default function CustomModal({
       )}
       {isFriendsList && <Button onClick={onOpen}>{buttonText}</Button>}
       {isEditProfile && <Button onClick={onOpen}>Edit Profile</Button>}
+      {isSettings && (
+        <IconButton
+          aria-label="Settings Icon"
+          variant="ghost"
+          onClick={onOpen}
+          display={{ md: "none" }}
+        >
+          <Settings />
+        </IconButton>
+      )}
       <Modal isOpen={isOpen} onClose={onClose} motionPreset="none">
         <ModalOverlay />
 

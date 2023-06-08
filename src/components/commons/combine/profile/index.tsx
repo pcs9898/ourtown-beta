@@ -1,5 +1,13 @@
 import { userState } from "@/src/commons/libraries/recoil/recoil";
-import { Avatar, Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import CustomModal from "../customModal";
 import FriendsListContainer from "@/src/components/units/friendsList/friendsList.container";
@@ -26,6 +34,7 @@ export default function Profile({
 }: IProfileProps) {
   const { avatarUrl, username, town, friends, id } = profileData;
   const currentUser = useRecoilValue(userState);
+  const backgroundColor = useColorModeValue("white", "gray.800");
 
   return (
     <Flex
@@ -40,7 +49,7 @@ export default function Profile({
       top="3.5rem"
       maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
       zIndex={9}
-      bgColor="white"
+      bgColor={backgroundColor}
     >
       <Avatar src={avatarUrl} name={username} boxSize="3.5rem" />
       <Box>
@@ -52,10 +61,10 @@ export default function Profile({
           <Heading fontSize={{ base: "1.25rem", md: "1.5rem" }}>
             {username}
           </Heading>
-          <Text fontSize="1.25rem" color="subText">
+          <Text fontSize="1.25rem" color="gray">
             ‧
           </Text>
-          <Text fontSize="1.25rem" color="subText">
+          <Text fontSize="1.25rem" color="gray">
             {town}
           </Text>
         </Flex>

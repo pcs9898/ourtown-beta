@@ -40,6 +40,7 @@ export default function Layouts({ children }: ILayoutsProps) {
             setCurrentUser({
               uid: user.uid,
               email: user.email || "",
+              avatarUrl: userData.avatarUrl,
               username: userData.username,
               city: userData.city,
               town: userData.town,

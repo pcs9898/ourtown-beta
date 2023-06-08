@@ -41,7 +41,7 @@ export default function FriendItem({
             >
               {username}
             </Heading>{" "}
-            <Text color="subText" fontSize="1rem">
+            <Text color="gray" fontSize="1rem">
               {"‧ " + town}
             </Text>
           </Flex>

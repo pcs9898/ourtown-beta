@@ -16,6 +16,7 @@ import {
   IconButton,
   Image,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   ChatBubbleOutline,
@@ -65,7 +66,8 @@ export default function PostItem({
     user: { avatarUrl, username },
   } = postItemData;
   const [currentUser, setCurrentUser] = useRecoilState(userState);
-
+  const authorBgColor = useColorModeValue("teal.500", "teal.200");
+  const authorFontColor = useColorModeValue("white", "#1B212D");
   const setCurrentHeader = useSetRecoilState(headerState);
   const router = useRouter();
 
@@ -106,9 +108,9 @@ export default function PostItem({
                 <Highlight
                   query="Author"
                   styles={{
-                    bg: "main",
+                    bg: authorBgColor,
                     borderRadius: "base",
-                    color: "white",
+                    color: authorFontColor,
                     px: "0.375rem",
                     py: "0",
                     fontWeight: "semibold",
@@ -120,7 +122,7 @@ export default function PostItem({
                 </Highlight>
               )}
             </Flex>
-            <Flex color="subText" gap="0.25rem">
+            <Flex color="gray" gap="0.25rem">
               <Text>{town}</Text>
               <Text>‧</Text>
               <Text>{formatTimeAgo(createdAt)}</Text>

@@ -4,6 +4,8 @@ import {
   TabList,
   Tabs,
   useBreakpointValue,
+  useColorMode,
+  useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -18,7 +20,8 @@ interface ICustomTabsProps {
     | "dicoverBigCategory"
     | "discoverSmallRestaurantCategory"
     | "profileCategory"
-    | "meProfileCategory";
+    | "meProfileCategory"
+    | "languageSettings";
 }
 
 function CustomTabs({
@@ -31,6 +34,9 @@ function CustomTabs({
     "32.3125rem": "0.1rem",
   });
   const router = useRouter();
+  const backgroundColor = useColorModeValue("white", "gray.800");
+  const borderBottomColor = useColorModeValue("#dbdbdb", "none");
+  const { colorMode } = useColorMode();
 
   const handleClickTab = (tab: string = "Daily") => {
     onClickTab(tab);
@@ -70,6 +76,8 @@ function CustomTabs({
         return ["Posts", "Liked", "Saved"];
       case "profileCategory":
         return ["Posts"];
+      case "languageSettings":
+        return ["English", "Korean"];
       default:
         return ["hi"];
     }
@@ -82,19 +90,22 @@ function CustomTabs({
         variant="solid-rounded"
         overflow="hidden"
         overflowX="scroll"
-        colorScheme="teal"
+        colorScheme={colorMode === "light" ? "teal" : "customTealForColorMode"}
         position={isCreatePost ? "unset" : "sticky"}
         top="3.5rem"
         maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
         zIndex={9}
-        bgColor="white"
+        bgColor={isCreatePost ? "none" : backgroundColor}
         sx={{
           "@media (max-width: 32.3125rem)": {
             "::-webkit-scrollbar": {
               display: "none",
             },
             "::-webkit-scrollbar-thumb": {},
-            borderBottom: isCreatePost ? "0" : "1px solid #dbdbdb",
+            borderBottom:
+              isCreatePost || categoryKindOptions === "languageSettings"
+                ? "0"
+                : `1px solid ${borderBottomColor}`,
           },
           "@media (min-width: 32.3125rem)": {
             "&:hover": {

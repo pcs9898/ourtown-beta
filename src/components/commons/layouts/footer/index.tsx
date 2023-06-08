@@ -6,6 +6,7 @@ import {
   HStack,
   IconButton,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   AccountCircleOutlined,
@@ -22,6 +23,10 @@ export default function FooterLayout() {
   const router = useRouter();
   const pathname = router.pathname;
   const currentUser = useRecoilValue(userState);
+  const backgroundColor = useColorModeValue("white", "gray.800");
+  const inactiveIconColor = useColorModeValue("gray.800", "#EEEFF1");
+  const activeIconColor = useColorModeValue("teal.500", "teal.200");
+  const borderTopColor = useColorModeValue("#dbdbdb", "none");
 
   return (
     <Box as="footer" display={{ md: "none" }}>
@@ -34,16 +39,18 @@ export default function FooterLayout() {
         left="0"
         right="0"
         height="4rem"
-        bg="white"
+        bgColor={backgroundColor}
         zIndex="sticky"
-        borderTop="1px solid #dbdbdb"
+        borderTop={`1px solid ${borderTopColor}`}
       >
         <IconButton
           icon={<HomeOutlined style={{ fontSize: "2rem" }} />}
           aria-label="Home"
           variant="ghost"
           color={
-            pathname === "/" || pathname.includes("/posts/") ? "teal" : "black"
+            pathname === "/" || pathname.includes("/posts/")
+              ? activeIconColor
+              : inactiveIconColor
           }
           as={Link}
           href="/"
@@ -53,7 +60,7 @@ export default function FooterLayout() {
           icon={<SearchOutlined style={{ fontSize: "2rem" }} />}
           aria-label="Search"
           variant="ghost"
-          color={pathname === "/search" ? "teal" : "black"}
+          color={pathname === "/search" ? activeIconColor : inactiveIconColor}
           as={Link}
           href="/search"
         />
@@ -62,7 +69,11 @@ export default function FooterLayout() {
           icon={<MapOutlined style={{ fontSize: "2rem" }} />}
           aria-label="Discover"
           variant="ghost"
-          color={pathname.startsWith("/discover") ? "teal" : "black"}
+          color={
+            pathname.startsWith("/discover")
+              ? activeIconColor
+              : inactiveIconColor
+          }
           as={Link}
           href="/discover"
         />
@@ -71,7 +82,9 @@ export default function FooterLayout() {
           icon={<ChatBubbleOutlineOutlined style={{ fontSize: "2rem" }} />}
           aria-label="Messages"
           variant="ghost"
-          color={pathname.startsWith("/chat") ? "teal" : "black"}
+          color={
+            pathname.startsWith("/chat") ? activeIconColor : inactiveIconColor
+          }
           as={Link}
           href="/chat"
         />

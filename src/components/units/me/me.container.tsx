@@ -60,7 +60,6 @@ export default function MeContainer() {
       onSuccess: ({ isLiked, postId }) => {
         queryClient.setQueryData(["posts", currentTab], (prevData: any) => {
           if (prevData) {
-            console.log(prevData);
             if (isLiked) {
               setCurrentUser((prev: any) => ({
                 ...prev,

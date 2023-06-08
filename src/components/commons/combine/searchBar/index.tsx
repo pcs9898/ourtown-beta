@@ -57,6 +57,7 @@ export default function SearchBar() {
         <Search />
       </InputLeftElement>
       <Input
+        color="gray"
         variant="filled"
         placeholder={`Search near ${currentUser?.city}`}
         onChange={handleInputChange}

@@ -11,6 +11,7 @@ import {
   useToast,
   LinkOverlay,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   ArrowBackIosNew,
@@ -27,6 +28,8 @@ import CustomPopover from "../../combine/customPopover";
 import { auth } from "@/src/commons/libraries/firebase/firebase";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import CustomModal from "../../combine/customModal";
+import SettingsConatiner from "@/src/components/units/settrings";
 
 export default function HeaderLayout() {
   const router = useRouter();
@@ -35,6 +38,8 @@ export default function HeaderLayout() {
   const currentHeader = useRecoilValue(headerState);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const pathname = router.pathname;
+  const backgroundColor = useColorModeValue("white", "gray.800");
+  const borderBottomColor = useColorModeValue("#dbdbdb", "none");
 
   const isHome = pathname === "/";
   const isPostDetail = pathname.startsWith("/posts/");
@@ -78,7 +83,7 @@ export default function HeaderLayout() {
       px="1rem"
       py="0.5rem"
       height="3.5rem"
-      bgColor="white"
+      bgColor={backgroundColor}
       position="sticky"
       top={0}
       zIndex={10}
@@ -87,7 +92,7 @@ export default function HeaderLayout() {
           "::-webkit-scrollbar-thumb": {},
           borderBottom:
             pathname === "/discover" || pathname === "/chat"
-              ? "1px solid #dbdbdb"
+              ? `1px solid ${borderBottomColor}`
               : "0",
         },
       }}
@@ -95,7 +100,7 @@ export default function HeaderLayout() {
       <Flex w="100%" justifyContent="space-between" alignItems="center">
         {!isMobile && (
           <Flex gap="0.75rem">
-            <Button variant="ghost" p="0" as={Link} href="/">
+            <Button variant="ghost" p="0" as={Link} href="/" colorScheme="teal">
               <Image
                 src="/logo.svg"
                 alt="Logo Image"
@@ -179,17 +184,19 @@ export default function HeaderLayout() {
               <Heading fontSize="1.5rem" alignSelf="center">
                 {currentUser?.username}
               </Heading>{" "}
-              <Text fontSize="1.5rem" color="subText">
+              <Text fontSize="1.5rem" color="gray">
                 ‧
               </Text>
-              <Text fontSize="1.25rem" color="subText">
+              <Text fontSize="1.25rem" color="gray">
                 {currentUser?.town}
               </Text>
             </Flex>
-            <IconButton aria-label="Settings Icon" variant="ghost">
-              <Settings />
-            </IconButton>
           </>
+        )}
+        {isMe && (
+          <CustomModal isFixSize={false} isSettings={true}>
+            <SettingsConatiner />
+          </CustomModal>
         )}
         {isProfile && isMobile && (
           <>
@@ -220,6 +227,7 @@ export default function HeaderLayout() {
             <CustomPopover
               isNotifications={false}
               avatarName={currentUser?.username}
+              avatarUrl={currentUser?.avatarUrl}
             >
               <Button onClick={handleLogout}>로그아웃</Button>
             </CustomPopover>

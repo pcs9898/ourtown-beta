@@ -12,6 +12,7 @@ import {
   IconButton,
   Image,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   ChatBubbleOutline,
@@ -61,12 +62,14 @@ export default function PostDetail({
   const currentUser = useRecoilValue(userState);
   const setCurrentHeader = useSetRecoilState(headerState);
   const router = useRouter();
+  const authorBgColor = useColorModeValue("teal.500", "teal.200");
+  const authorFontColor = useColorModeValue("#EEEFF1", "gray.800");
+
   return (
     <Box
       position="sticky"
       top={{ base: "3.5rem", md: "4.125rem" }}
       zIndex={1200}
-      bgColor="white"
     >
       <Card mb="2px">
         <CardHeader display="flex" px="1rem" py="0.75rem">
@@ -95,9 +98,9 @@ export default function PostDetail({
                   <Highlight
                     query="Author"
                     styles={{
-                      bg: "main",
+                      bg: authorBgColor,
                       borderRadius: "base",
-                      color: "white",
+                      color: authorFontColor,
                       px: "0.375rem",
                       py: "0",
                       fontWeight: "semibold",
@@ -109,7 +112,7 @@ export default function PostDetail({
                   </Highlight>
                 )}
               </Flex>
-              <Flex color="subText" gap="0.25rem">
+              <Flex color="gray" gap="0.25rem">
                 <Text>{town}</Text>
                 <Text>‧</Text>
                 <Text>{formatTimeAgo(createdAt)}</Text>

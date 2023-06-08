@@ -1,4 +1,4 @@
-import { Box, Button, Flex, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, VStack, useColorModeValue } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import {
   AddOutlined,
@@ -34,6 +34,8 @@ export default function NavLayout() {
   const router = useRouter();
   const pathname = router.pathname;
   const setCurrentHeader = useSetRecoilState(headerState);
+  const inactiveIconColor = useColorModeValue("gray.800", "#EEEFF1");
+  const activeIconColor = useColorModeValue("teal.500", "teal.200");
 
   return (
     <VStack
@@ -51,7 +53,9 @@ export default function NavLayout() {
     >
       <NavButton
         color={
-          pathname === "/" || pathname.includes("/posts/") ? "teal" : "black"
+          pathname === "/" || pathname.includes("/posts/")
+            ? activeIconColor
+            : inactiveIconColor
         }
         as={Link}
         href="/"
@@ -61,7 +65,9 @@ export default function NavLayout() {
       </NavButton>
 
       <NavButton
-        color={pathname.startsWith("/discover") ? "teal" : "black"}
+        color={
+          pathname.startsWith("/discover") ? activeIconColor : inactiveIconColor
+        }
         as={Link}
         href="/discover"
       >
@@ -69,7 +75,9 @@ export default function NavLayout() {
         Discover
       </NavButton>
       <NavButton
-        color={pathname.startsWith("/chat") ? "teal" : "black"}
+        color={
+          pathname.startsWith("/chat") ? activeIconColor : inactiveIconColor
+        }
         as={Link}
         href="/chat"
       >

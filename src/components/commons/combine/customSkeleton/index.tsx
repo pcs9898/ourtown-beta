@@ -1,16 +1,30 @@
-import { Box, Flex, Skeleton, SkeletonCircle, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Skeleton,
+  SkeletonCircle,
+  VStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 interface ICustomSkeletonProps {
   skeletonType: "postDetail" | "postList" | "profileDetail";
 }
 
 export default function CustomSkeleton({ skeletonType }: ICustomSkeletonProps) {
+  const backgroundColor = useColorModeValue("white", "gray.700");
+
   const renderSkeletonByTypes = (skeletonType: string) => {
     switch (skeletonType) {
       case "postDetail":
         return (
           <Box width="100%">
-            <Box boxShadow="lg" borderRadius="base" bg="white" w="100%">
+            <Box
+              boxShadow="lg"
+              borderRadius="base"
+              bg={backgroundColor}
+              w="100%"
+            >
               <Flex
                 flexDirection="row"
                 alignItems="center"
@@ -69,7 +83,12 @@ export default function CustomSkeleton({ skeletonType }: ICustomSkeletonProps) {
                 gap="1rem"
                 mb="0.5rem"
               >
-                <Box boxShadow="md" borderRadius="base" bg="white" w="100%">
+                <Box
+                  boxShadow="md"
+                  borderRadius="base"
+                  bg={backgroundColor}
+                  w="100%"
+                >
                   <Flex
                     flexDirection="row"
                     alignItems="center"
@@ -100,7 +119,12 @@ export default function CustomSkeleton({ skeletonType }: ICustomSkeletonProps) {
                   </Flex>
                 </Box>
 
-                <Box boxShadow="md" borderRadius="base" bg="white" w="100%">
+                <Box
+                  boxShadow="md"
+                  borderRadius="base"
+                  bg={backgroundColor}
+                  w="100%"
+                >
                   <Flex
                     flexDirection="row"
                     alignItems="center"
