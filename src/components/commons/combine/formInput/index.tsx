@@ -18,7 +18,6 @@ export default function FormInput({ isComment, onSubmit }: IFormInputProps) {
 
   const { t } = useTranslation();
 
-  console.log(currentUser);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value);
   };

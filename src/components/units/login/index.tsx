@@ -28,12 +28,16 @@ export default function LoginConatinerPresenter() {
         const userData = userSnapshot.data();
 
         setUserState({
-          uid: user.uid,
-          email: user.email || "",
+          uid: userData.uid,
           username: userData.username,
+          email: userData.email,
           city: userData.city,
           town: userData.town,
-          isLiked: userData.isLiked,
+          avatarUrl: userData.avatarUrl,
+          likedPosts: userData.likedPosts,
+          likedDiscovers: userData.likedDiscovers,
+          friends: userData.friends,
+          chatRooms: userData.chatRooms,
         });
       }
       router.push("/");
@@ -69,12 +73,16 @@ export default function LoginConatinerPresenter() {
         const userData = userSnapshot.data();
 
         setUserState({
-          uid: user.uid,
-          email: user.email || "",
+          uid: userData.uid,
           username: userData.username,
+          email: userData.email,
           city: userData.city,
           town: userData.town,
-          isLiked: userData.isLiked,
+          avatarUrl: userData.avatarUrl,
+          likedPosts: userData.likedPosts,
+          likedDiscovers: userData.likedDiscovers,
+          friends: userData.friends,
+          chatRooms: userData.chatRooms,
         });
       }
       router.push("/");

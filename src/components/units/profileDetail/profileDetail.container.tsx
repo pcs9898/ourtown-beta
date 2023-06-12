@@ -9,10 +9,12 @@ import {
   doc,
   getDoc,
   getDocs,
+  getFirestore,
   increment,
   limit,
   orderBy,
   query,
+  setDoc,
   startAfter,
   updateDoc,
   where,
@@ -27,6 +29,9 @@ import CustomSpinner from "../../commons/combine/customSpinner";
 import EndMessage from "../../commons/combine/endMessage";
 import PostItem from "../../commons/combine/postItem";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
+import { getDatabase, ref, push, set, child, get } from "firebase/database";
+import { useEffect } from "react";
+import { IUser } from "@/src/commons/types/globalTypes";
 
 export default function ProfileDetailContainer() {
   const router = useRouter();
@@ -255,6 +260,93 @@ export default function ProfileDetailContainer() {
 
   const postList = postsData?.pages?.flatMap((page) => page.posts) ?? [];
 
+  const createChatRoom = async (friendId) => {
+    const chatRoomsRef = ref(getDatabase(), "chatRooms");
+    const newChatRoomRef = push(chatRoomsRef);
+
+    const chatRoomData = {
+      roomId: newChatRoomRef.key,
+      users: [currentUser?.uid, friendId].filter(Boolean), // undefined 또는 falsy 값은 필터링합니다.
+    };
+
+    if (chatRoomData.users.length < 2) {
+      throw new Error("유효하지 않은 사용자 ID"); // 사용자 ID가 누락되거나 유효하지 않을 경우 에러를 throw합니다.
+    }
+
+    await set(newChatRoomRef, chatRoomData);
+
+    // Firestore의 user collection에 chat room ID를 추가
+    const userCollectionRef = collection(getFirestore(), "users");
+    const currentUserDocRef = doc(userCollectionRef, currentUser?.uid);
+    const friendUserDocRef = doc(userCollectionRef, friendId);
+
+    await updateDoc(currentUserDocRef, {
+      chatRooms: arrayUnion(newChatRoomRef.key),
+    });
+    await updateDoc(friendUserDocRef, {
+      chatRooms: arrayUnion(newChatRoomRef.key),
+    });
+
+    setCurrentUser((prev: any) => ({
+      ...prev,
+      chatRooms: prev.chatRooms
+        ? [...prev.chatRooms, newChatRoomRef.key]
+        : [newChatRoomRef.key],
+    }));
+
+    return newChatRoomRef.key;
+  };
+
+  const moveToChatDetail = async (friendId: string, username: string) => {
+    // Firebase Realtime Database의 채팅방 목록 레퍼런스
+    const chatRoomsRef = ref(getDatabase(), "chatRooms");
+
+    // 채팅방 생성 또는 이미 존재하는 채팅방 확인
+    const createOrFindChatRoom = async () => {
+      // 사용자의 UID
+      const currentUserUid = currentUser?.uid;
+
+      // 기존 채팅방 목록 조회
+      const snapshot = await get(chatRoomsRef);
+
+      // 채팅방을 찾을 때까지 반복
+      let existingChatRoomId = null;
+      snapshot.forEach((childSnapshot) => {
+        const chatRoom = childSnapshot.val();
+        // 이미 존재하는 채팅방인지 확인
+        if (
+          chatRoom.users.includes(currentUserUid) &&
+          chatRoom.users.includes(friendId)
+        ) {
+          existingChatRoomId = childSnapshot.key;
+        }
+      });
+
+      // 이미 존재하는 채팅방이 있는 경우 해당 채팅방 ID 반환
+      if (existingChatRoomId) {
+        return existingChatRoomId;
+      }
+
+      // 존재하지 않는 경우 새로운 채팅방 생성
+      const newChatRoomId = await createChatRoom(friendId);
+      return newChatRoomId;
+    };
+
+    try {
+      setCurrentHeader((prev) => ({
+        ...prev,
+        chatUserName: username,
+        chatUserId: friendId,
+        chatUserTown: userData?.town,
+      }));
+
+      const roomId = await createOrFindChatRoom(); // 채팅방 생성 또는 기존 채팅방 확인
+      router.push(`/chat/${roomId}`); // 해당 채팅방으로 이동하는 페이지로 리다이렉트
+    } catch (error) {
+      console.log("Error creating or finding chat room:", error);
+    }
+  };
+
   return (
     <>
       <Box
@@ -273,6 +365,7 @@ export default function ProfileDetailContainer() {
               isMine={false}
               addFriend={addFriend}
               unFriend={unFriend}
+              moveToChatDetail={moveToChatDetail}
             />
             <CustomTabs categoryKindOptions="profileCategory" />
           </>

@@ -42,7 +42,7 @@ interface IPostItemProps {
     category: string;
     user: {
       id: string;
-      avatarUrl: string;
+      avatarUrl?: string;
       username: string;
       likedPosts: string[];
     };
@@ -88,7 +88,7 @@ export default function PostItem({
           <Avatar
             cursor="pointer"
             name={username}
-            src={avatarUrl}
+            src={avatarUrl || null}
             onClick={() => {
               if (uid !== currentUser?.uid) {
                 setCurrentHeader({
@@ -144,7 +144,7 @@ export default function PostItem({
           <Image
             height="12rem"
             width="100%"
-            objectFit="cover"
+            objectFit="fill"
             src={imageUrl}
             alt="Chakra UI"
           />

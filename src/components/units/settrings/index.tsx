@@ -1,4 +1,7 @@
+import { auth } from "@/src/commons/libraries/firebase/firebase";
+import { userState } from "@/src/commons/libraries/recoil/recoil";
 import {
+  Button,
   Flex,
   Heading,
   IconButton,
@@ -9,10 +12,13 @@ import {
   Tabs,
   VStack,
   useColorMode,
+  useToast,
 } from "@chakra-ui/react";
 import { ArrowBackIosNew } from "@mui/icons-material";
+import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSetRecoilState } from "recoil";
 
 interface ISettingsConatiner {
   onClose?: () => void;
@@ -22,15 +28,37 @@ export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
   const [selectedTab, setSelectedTab] = useState("Eng");
   const { colorMode, toggleColorMode } = useColorMode();
   const { t, i18n } = useTranslation();
+  const setCurrentUser = useSetRecoilState(userState);
+  const router = useRouter();
+  const toast = useToast();
 
   const onClickTab = (tab: string) => {
     i18n.changeLanguage(tab).then(() => localStorage.setItem("language", tab));
   };
 
-  const handleColorModeSwitch = (e: ChangeEvent<HTMLInputElement>) => {
-    const { checked } = e.target;
-    if (checked) {
-      //   toggleColorMode()
+  const handleLogout = async () => {
+    try {
+      await auth.signOut().then(() => {
+        setCurrentUser(null);
+        router.push("/login");
+      });
+
+      toast({
+        title: "Success",
+        description: "logout",
+        status: "success",
+        duration: 5000, // Set the desired duration in milliseconds (e.g., 5000 for 5 seconds)
+        isClosable: true,
+      });
+    } catch (error: any) {
+      console.log("로그아웃 에러:", error);
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+        duration: 5000, // Set the desired duration in milliseconds (e.g., 5000 for 5 seconds)
+        isClosable: true,
+      });
     }
   };
 
@@ -107,6 +135,9 @@ export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
               </Tab>
             </Tabs>
           </Flex>
+          <Button mt="6rem" colorScheme="red" onClick={handleLogout}>
+            Log out
+          </Button>
         </VStack>
       </ModalBody>
     </>

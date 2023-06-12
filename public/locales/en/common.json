@@ -40,5 +40,11 @@
   "meProfileCategoryTab2": "Liked",
   "meProfileCategoryTab3": "Saved",
   "profileCategoryTab1": "Posts",
-  "profileDetailTitle": "'s Profile'"
+  "profileDetailTitle": "'s Profile'",
+  "formatTimeNow": "just now",
+  "formatTimeMinutes": " minutes ago",
+  "formatTimeHours": " hours ago",
+  "formatTimeDays": " days ago",
+  "formatTimeMonths1": " months ago",
+  "formatTimeMonths2": " month ago"
 }

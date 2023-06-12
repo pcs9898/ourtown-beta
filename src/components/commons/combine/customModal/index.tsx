@@ -23,6 +23,7 @@ interface ICustomModalProps {
   isFriendsList?: boolean;
   isEditProfile?: boolean;
   isSettings?: boolean;
+  isPcSettings?: boolean;
   buttonText?: string;
 }
 
@@ -34,6 +35,7 @@ export default function CustomModal({
   isEditProfile,
   isFriendsList,
   isSettings,
+  isPcSettings,
   buttonText,
 }: ICustomModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -70,6 +72,16 @@ export default function CustomModal({
           variant="ghost"
           onClick={onOpen}
           display={{ md: "none" }}
+        >
+          <Settings />
+        </IconButton>
+      )}
+      {isPcSettings && (
+        <IconButton
+          aria-label="Settings Icon"
+          variant="ghost"
+          onClick={onOpen}
+          // display={{ md: "none" }}
         >
           <Settings />
         </IconButton>

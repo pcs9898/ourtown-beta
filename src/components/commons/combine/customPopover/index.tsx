@@ -41,11 +41,9 @@ export default function CustomPopover({
           <Avatar name={avatarName} src={avatarUrl} cursor="pointer" />
         )}
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent w="100%" p="0">
         <PopoverArrow />
-        <PopoverBody px="1rem" py="0.75rem">
-          {children}
-        </PopoverBody>
+        <PopoverBody p="0">{children}</PopoverBody>
       </PopoverContent>
     </Popover>
   );

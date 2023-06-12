@@ -69,7 +69,7 @@ export default function PostDetail({
     <Box
       position="sticky"
       top={{ base: "3.5rem", md: "4.125rem" }}
-      zIndex={1200}
+      zIndex={200}
     >
       <Card mb="2px">
         <CardHeader display="flex" px="1rem" py="0.75rem">

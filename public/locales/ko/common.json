@@ -40,5 +40,11 @@
   "meProfileCategoryTab2": "좋아요",
   "meProfileCategoryTab3": "관심있는",
   "profileCategoryTab1": "글",
-  "profileDetailTitle": "의 프로필"
+  "profileDetailTitle": "의 프로필",
+  "formatTimeNow": "지금",
+  "formatTimeMinutes": "분 전",
+  "formatTimeHours": "시간 전",
+  "formatTimeDays": "일 전",
+  "formatTimeMonths1": "달 전",
+  "formatTimeMonths2": "달 전"
 }

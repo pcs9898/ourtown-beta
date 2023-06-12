@@ -47,6 +47,7 @@ export default function Layouts({ children }: ILayoutsProps) {
               likedPosts: userData.likedPosts,
               likedDiscovers: userData.likedDiscovers,
               friends: userData.friends,
+              chatRooms: userData.chatRooms,
             });
 
             setIsloading(false);
@@ -83,7 +84,7 @@ export default function Layouts({ children }: ILayoutsProps) {
     </Box>
   ) : (
     currentUser && (
-      <Box maxW="71.875rem" margin="0 auto" minH="15rem">
+      <Box maxW="71.875rem" margin="0 auto" minH="15rem" marginTop="3.5rem">
         <>
           <HeaderLayout />
           <MainLayout>{children}</MainLayout>

@@ -13,6 +13,8 @@ import CustomModal from "../customModal";
 import FriendsListContainer from "@/src/components/units/friendsList/friendsList.container";
 import EditProfileContainer from "@/src/components/units/editProfile/editProfile.container";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface IProfileProps {
   profileData: {
@@ -23,8 +25,10 @@ interface IProfileProps {
     id: string;
   };
   isMine?: boolean;
-  addFriend: (userId: string) => void;
-  unFriend: (userId: string) => void;
+  isPcHeaderAvatar?: boolean;
+  addFriend?: (userId: string) => void;
+  unFriend?: (userId: string) => void;
+  moveToChatDetail?: (userId: string, username: string) => void;
 }
 
 export default function Profile({
@@ -32,8 +36,10 @@ export default function Profile({
   isMine,
   addFriend,
   unFriend,
+  moveToChatDetail,
+  isPcHeaderAvatar = false,
 }: IProfileProps) {
-  const { avatarUrl, username, town, friends, id } = profileData;
+  const { avatarUrl, username, town, id } = profileData;
   const currentUser = useRecoilValue(userState);
   const backgroundColor = useColorModeValue("white", "gray.800");
   const { t } = useTranslation();
@@ -47,13 +53,15 @@ export default function Profile({
       // py="0.75rem"
       pb="0.75rem"
       pt={{ base: "0", md: "0.75rem" }}
-      position="sticky"
+      position={isPcHeaderAvatar ? "unset" : "sticky"}
       top="3.5rem"
       maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
       zIndex={9}
       bgColor={backgroundColor}
     >
-      <Avatar src={avatarUrl} name={username} boxSize="3.5rem" />
+      <Link href="/me">
+        <Avatar src={avatarUrl} name={username} boxSize="3.5rem" />
+      </Link>
       <Box>
         <Flex
           alignItems="center"
@@ -82,9 +90,11 @@ export default function Profile({
                 isFixSize={false}
                 isFriendsList={true}
                 buttonText={
-                  friends.length +
+                  currentUser?.friends?.length +
                   " " +
-                  (friends.length > 1 ? t("friendButton") : t("friendsButton"))
+                  (currentUser?.friends?.length > 1
+                    ? t("friendButton")
+                    : t("friendsButton"))
                 }
               >
                 <FriendsListContainer />
@@ -105,7 +115,12 @@ export default function Profile({
                 </Button>
                 // addFriend mutation
               )}
-              <Button colorScheme="teal">{t("messageButton")}</Button>
+              <Button
+                colorScheme="teal"
+                onClick={() => moveToChatDetail(id, username)}
+              >
+                {t("messageButton")}
+              </Button>
               {/* chatDetail Link packaging */}
             </>
           )}

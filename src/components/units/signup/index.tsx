@@ -75,20 +75,23 @@ export default function SignupContainerPresenter() {
         likedPosts: [],
         likedDiscovers: [],
         friends: [],
+        chatRooms: [],
+        avatarUrl: "",
       });
 
       await setUserState({
         uid: user.uid,
         email: user.email || "",
         username: user.displayName || "",
+        avatarUrl: "",
         city,
         town,
         likedPosts: [],
         likedDiscovers: [],
+        chatRooms: [],
         friends: [],
       });
       router.push("/");
-      setIsButtonLoading(false);
     } catch (error: any) {
       setIsButtonLoading(false);
       if (error instanceof GeolocationPositionError) {
@@ -122,11 +125,13 @@ export default function SignupContainerPresenter() {
 
       await setDoc(doc(db, "users", user.uid), {
         username,
+        avatarUrl: "",
         city,
         town,
         likedPosts: [],
         likedDiscovers: [],
         friends: [],
+        chatRooms: [],
       });
 
       if (username) {
@@ -134,16 +139,17 @@ export default function SignupContainerPresenter() {
           uid: user.uid,
           email,
           username,
+          avatarUrl: "",
           city,
           town,
           likedPosts: [],
           likedDiscovers: [],
           friends: [],
+          chatRooms: [],
         });
       }
 
       router.push("/");
-      setIsButtonLoading(false);
     } catch (error: any) {
       setIsButtonLoading(false);
       if (error instanceof GeolocationPositionError) {

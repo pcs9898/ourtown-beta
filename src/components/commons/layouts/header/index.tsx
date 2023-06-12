@@ -31,6 +31,9 @@ import Link from "next/link";
 import CustomModal from "../../combine/customModal";
 import SettingsConatiner from "@/src/components/units/settrings";
 import { useTranslation } from "react-i18next";
+import Profile from "../../combine/profile";
+import LogoutIcon from "@mui/icons-material/Logout";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 export default function HeaderLayout() {
   const router = useRouter();
@@ -46,8 +49,9 @@ export default function HeaderLayout() {
   const isHome = pathname === "/";
   const isPostDetail = pathname.startsWith("/posts/");
   const isSearch = pathname === "/search";
-  const isDiscover = pathname.startsWith("/discover");
-  const isChat = pathname.startsWith("/chat");
+  const isDiscover = pathname.startsWith("/discover/");
+  const isChat = pathname === "/chat";
+  const isChatDetail = pathname.startsWith("/chat/");
   const isMe = pathname === "/me";
   const isProfile = pathname.includes("/profile");
 
@@ -86,9 +90,10 @@ export default function HeaderLayout() {
       py="0.5rem"
       height="3.5rem"
       bgColor={backgroundColor}
-      position="sticky"
+      position="fixed"
       top={0}
-      zIndex={10}
+      zIndex={210}
+      w="100%"
       sx={{
         "@media (max-width: 32.3125rem)": {
           "::-webkit-scrollbar-thumb": {},
@@ -180,6 +185,40 @@ export default function HeaderLayout() {
             </IconButton>{" "}
           </>
         )}
+
+        {isChatDetail && isMobile && (
+          <>
+            <IconButton
+              variant="ghost"
+              aria-label="Back Button"
+              icon={<ArrowBackIosNew />}
+              onClick={() => router.back()}
+            />
+            <Flex
+              textAlign="center"
+              justifyContent="center"
+              alignItems="center"
+              position="absolute"
+              width="100%"
+              left="0"
+              right="0"
+              margin="auto"
+              zIndex="1"
+              as={Link}
+              href={`/profile/${currentHeader?.chatUserId}`}
+              gap="0.25rem"
+            >
+              <Heading>{currentHeader?.chatUserName}</Heading>
+              <Text fontSize="1.125rem" color="gray">
+                ‧
+              </Text>
+              <Text fontSize="1.125rem" color="gray">
+                {currentHeader?.chatUserTown}
+              </Text>
+            </Flex>
+          </>
+        )}
+
         {isMe && isMobile && (
           <>
             <Flex fontSize="1.5rem" gap="0.25rem" alignItems="center">
@@ -231,7 +270,29 @@ export default function HeaderLayout() {
               avatarName={currentUser?.username}
               avatarUrl={currentUser?.avatarUrl}
             >
-              <Button onClick={handleLogout}>로그아웃</Button>
+              <Flex flexDir="column" h="100%">
+                <Profile
+                  isMine={true}
+                  profileData={currentUser}
+                  isPcHeaderAvatar={true}
+                />
+                <Flex justifyContent="space-between" px="1rem" pb="0.75rem">
+                  <CustomModal isFixSize={false} isPcSettings={true}>
+                    <SettingsConatiner />
+                  </CustomModal>
+
+                  <IconButton aria-label="Question" variant="ghost">
+                    <QuestionMarkIcon />
+                  </IconButton>
+                  <IconButton
+                    variant="ghost"
+                    aria-label="Log out"
+                    onClick={handleLogout}
+                  >
+                    <LogoutIcon />
+                  </IconButton>
+                </Flex>
+              </Flex>
             </CustomPopover>
           </Flex>
         )}
