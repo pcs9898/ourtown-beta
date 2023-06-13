@@ -4,3 +4,7 @@ declare module "*.svg" {
   const src: string;
   export default src;
 }
+
+declare const window: typeof globalThis & {
+  kakao: any;
+};

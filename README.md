@@ -57,4 +57,4 @@
 - [x] settings
 - [x] chat deatil
 - [x] chat list
-- [ ] discover
+- [x] discover

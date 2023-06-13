@@ -5,11 +5,12 @@ import { getDatabase, ref, onValue, off, get } from "firebase/database";
 import { useQuery } from "react-query";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { db } from "@/src/commons/libraries/firebase/firebase";
-import { VStack } from "@chakra-ui/react";
+import { Flex, Heading, VStack, useColorModeValue } from "@chakra-ui/react";
 import ChatItem from "../../commons/combine/chatItem";
 
 export default function ChatListContainer() {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
+  const backgroundColor = useColorModeValue("white", "gray.800");
 
   const fetchUserData = async (userId) => {
     const userDocRef = doc(db, "users", userId);
@@ -72,10 +73,24 @@ export default function ChatListContainer() {
   }
 
   return (
-    <VStack width="100%" spacing={0}>
-      {chatroomsData?.map((chatItemData, i) => (
-        <ChatItem key={chatItemData.chatroomId} chatItemData={chatItemData} />
-      ))}
-    </VStack>
+    <>
+      <Flex
+        display={{ base: "none", md: "flex" }}
+        justifyContent="flex-start"
+        alignItems="center"
+        width="100%"
+        gap="0.25rem"
+        pos="sticky"
+        top="0"
+        bgColor={backgroundColor}
+      >
+        <Heading>Chats</Heading>
+      </Flex>
+      <VStack width="100%" spacing={0}>
+        {chatroomsData?.map((chatItemData, i) => (
+          <ChatItem key={chatItemData.chatroomId} chatItemData={chatItemData} />
+        ))}
+      </VStack>
+    </>
   );
 }

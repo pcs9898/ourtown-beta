@@ -46,5 +46,10 @@
   "formatTimeHours": " hours ago",
   "formatTimeDays": " days ago",
   "formatTimeMonths1": " months ago",
-  "formatTimeMonths2": " month ago"
+  "formatTimeMonths2": " month ago",
+  "dicoverBigCategoryTab1": "Restaurant",
+  "dicoverBigCategoryTab2": "Cafe/Dessert",
+  "dicoverBigCategoryTab3": "Salon/Beauty",
+  "dicoverBigCategoryTab4": "Hospital/Pharmacy",
+  "dicoverBigCategoryTab5": "Exercise"
 }

@@ -88,7 +88,7 @@ export default function PostItem({
           <Avatar
             cursor="pointer"
             name={username}
-            src={avatarUrl || null}
+            src={avatarUrl}
             onClick={() => {
               if (uid !== currentUser?.uid) {
                 setCurrentHeader({

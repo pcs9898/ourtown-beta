@@ -49,7 +49,7 @@ export default function HeaderLayout() {
   const isHome = pathname === "/";
   const isPostDetail = pathname.startsWith("/posts/");
   const isSearch = pathname === "/search";
-  const isDiscover = pathname.startsWith("/discover/");
+  const isDiscover = pathname === "/discover";
   const isChat = pathname === "/chat";
   const isChatDetail = pathname.startsWith("/chat/");
   const isMe = pathname === "/me";
@@ -94,13 +94,12 @@ export default function HeaderLayout() {
       top={0}
       zIndex={210}
       w="100%"
+      maxW="71.875rem"
       sx={{
         "@media (max-width: 32.3125rem)": {
           "::-webkit-scrollbar-thumb": {},
           borderBottom:
-            pathname === "/discover" || pathname === "/chat"
-              ? `1px solid ${borderBottomColor}`
-              : "0",
+            pathname === "/chat" ? `1px solid ${borderBottomColor}` : "0",
         },
       }}
     >
@@ -271,11 +270,13 @@ export default function HeaderLayout() {
               avatarUrl={currentUser?.avatarUrl}
             >
               <Flex flexDir="column" h="100%">
-                <Profile
-                  isMine={true}
-                  profileData={currentUser}
-                  isPcHeaderAvatar={true}
-                />
+                {currentUser && (
+                  <Profile
+                    isMine={true}
+                    profileData={currentUser}
+                    isPcHeaderAvatar={true}
+                  />
+                )}
                 <Flex justifyContent="space-between" px="1rem" pb="0.75rem">
                   <CustomModal isFixSize={false} isPcSettings={true}>
                     <SettingsConatiner />

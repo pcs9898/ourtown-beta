@@ -18,6 +18,7 @@ export default function SectionLayout({ children }: ISectionLayoutProps) {
       w="36.25rem"
       maxW={isWideSection ? "none" : "36.25rem"}
       minW="20rem"
+      h="100%"
     >
       {children}
     </Box>

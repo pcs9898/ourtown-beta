@@ -188,6 +188,7 @@ export default function SearchContainer() {
   const { isLoading, data, fetchNextPage, hasNextPage, isError, error } =
     useInfiniteQuery(
       ["search", category, debouncedSearchTerm],
+      // @ts-ignore
       ({ pageParam }) => {
         if (debouncedSearchTerm) {
           return searchDocuments(category, debouncedSearchTerm, pageParam);
@@ -203,6 +204,7 @@ export default function SearchContainer() {
 
   const postList =
     data?.pages
+      // @ts-ignore
       ?.flatMap((page) => page.posts)
       .sort((a, b) => b.createdAt - a.createdAt) ?? [];
 

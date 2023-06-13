@@ -53,7 +53,7 @@ export default function ChatDetailContainer() {
     const userDocRef = doc(db, "users", uid);
     const userSnapshot = await getDoc(userDocRef);
     const userData = userSnapshot.data();
-
+    if (!userData) return;
     userData.id = uid;
     return userData;
   };
@@ -70,7 +70,7 @@ export default function ChatDetailContainer() {
       return [];
     }
 
-    const otherUserId: string = Object.values(uids).find(
+    const otherUserId = Object.values(uids).find(
       (uid) => uid !== currentUser?.uid
     );
 

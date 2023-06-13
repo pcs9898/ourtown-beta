@@ -18,11 +18,11 @@ import Link from "next/link";
 
 interface IProfileProps {
   profileData: {
-    avatarUrl: string;
+    avatarUrl?: string;
     username: string;
     town: string;
     friends: string[];
-    id: string;
+    id?: string;
   };
   isMine?: boolean;
   isPcHeaderAvatar?: boolean;
@@ -92,7 +92,7 @@ export default function Profile({
                 buttonText={
                   currentUser?.friends?.length +
                   " " +
-                  (currentUser?.friends?.length > 1
+                  (currentUser?.friends?.length ?? 0 > 1
                     ? t("friendButton")
                     : t("friendsButton"))
                 }
@@ -104,24 +104,30 @@ export default function Profile({
             </>
           ) : (
             <>
-              {currentUser?.friends.includes(id) ? (
-                <Button colorScheme="red" onClick={() => unFriend(id)}>
-                  {t("unfriendButton")}
-                </Button>
-              ) : (
-                // unfriend mutation
-                <Button colorScheme="teal" onClick={() => addFriend(id)}>
-                  {t("addFriendButton")}
-                </Button>
+              {
+                id && currentUser?.friends.includes(id)
+                  ? unFriend && (
+                      <Button colorScheme="red" onClick={() => unFriend(id)}>
+                        {t("unfriendButton")}
+                      </Button>
+                    )
+                  : // unfriend mutation
+                    addFriend &&
+                    id && (
+                      <Button colorScheme="teal" onClick={() => addFriend(id)}>
+                        {t("addFriendButton")}
+                      </Button>
+                    )
                 // addFriend mutation
+              }
+              {moveToChatDetail && id && (
+                <Button
+                  colorScheme="teal"
+                  onClick={() => moveToChatDetail(id, username)}
+                >
+                  {t("messageButton")}
+                </Button>
               )}
-              <Button
-                colorScheme="teal"
-                onClick={() => moveToChatDetail(id, username)}
-              >
-                {t("messageButton")}
-              </Button>
-              {/* chatDetail Link packaging */}
             </>
           )}
         </Flex>

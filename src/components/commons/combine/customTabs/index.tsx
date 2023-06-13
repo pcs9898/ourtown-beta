@@ -63,7 +63,14 @@ function CustomTabs({
         ];
       case "profileCategory":
         return [t("mainCategoryTab2")];
-
+      case "dicoverBigCategory":
+        return [
+          t("dicoverBigCategoryTab1"),
+          t("dicoverBigCategoryTab2"),
+          t("dicoverBigCategoryTab3"),
+          t("dicoverBigCategoryTab4"),
+          t("dicoverBigCategoryTab5"),
+        ];
       default:
         return [];
     }
@@ -87,9 +94,7 @@ function CustomTabs({
           "Cafe/Dessert",
           "Salon/Beauty",
           "Hospital/Pharmacy",
-          "Household Goods",
           "Exercise",
-          "Cultural Activities",
         ];
       case "discoverSmallRestaurantCategory":
         return [

@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import { ChangeEvent, useState } from "react";
+
 import { useTranslation } from "react-i18next";
 import { useSetRecoilState } from "recoil";
 
@@ -25,7 +25,6 @@ interface ISettingsConatiner {
 }
 
 export default function SettingsConatiner({ onClose }: ISettingsConatiner) {
-  const [selectedTab, setSelectedTab] = useState("Eng");
   const { colorMode, toggleColorMode } = useColorMode();
   const { t, i18n } = useTranslation();
   const setCurrentUser = useSetRecoilState(userState);

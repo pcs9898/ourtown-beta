@@ -84,7 +84,13 @@ export default function Layouts({ children }: ILayoutsProps) {
     </Box>
   ) : (
     currentUser && (
-      <Box maxW="71.875rem" margin="0 auto" minH="15rem" marginTop="3.5rem">
+      <Box
+        maxW="71.875rem"
+        margin="0 auto"
+        minH="15rem"
+        marginTop={{ base: "3.5rem", md: "4rem" }}
+        h="100%"
+      >
         <>
           <HeaderLayout />
           <MainLayout>{children}</MainLayout>

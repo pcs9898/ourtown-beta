@@ -46,5 +46,10 @@
   "formatTimeHours": "시간 전",
   "formatTimeDays": "일 전",
   "formatTimeMonths1": "달 전",
-  "formatTimeMonths2": "달 전"
+  "formatTimeMonths2": "달 전",
+  "dicoverBigCategoryTab1": "음식점",
+  "dicoverBigCategoryTab2": "카페/디저트",
+  "dicoverBigCategoryTab3": "미용/뷰티",
+  "dicoverBigCategoryTab4": "병원/약국",
+  "dicoverBigCategoryTab5": "운동"
 }
