@@ -9,6 +9,7 @@ import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Head from "next/head";
 
 export default function LoginConatinerPresenter() {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
@@ -28,12 +29,16 @@ export default function LoginConatinerPresenter() {
         const userData = userSnapshot.data();
 
         setUserState({
-          uid: user.uid,
-          email: user.email || "",
+          uid: userData.uid,
           username: userData.username,
+          email: userData.email,
           city: userData.city,
           town: userData.town,
-          isLiked: userData.isLiked,
+          avatarUrl: userData.avatarUrl,
+          likedPosts: userData.likedPosts,
+          likedDiscovers: userData.likedDiscovers,
+          friends: userData.friends,
+          chatRooms: userData.chatRooms,
         });
       }
       router.push("/");
@@ -69,12 +74,16 @@ export default function LoginConatinerPresenter() {
         const userData = userSnapshot.data();
 
         setUserState({
-          uid: user.uid,
-          email: user.email || "",
+          uid: userData.uid,
           username: userData.username,
+          email: userData.email,
           city: userData.city,
           town: userData.town,
-          isLiked: userData.isLiked,
+          avatarUrl: userData.avatarUrl,
+          likedPosts: userData.likedPosts,
+          likedDiscovers: userData.likedDiscovers,
+          friends: userData.friends,
+          chatRooms: userData.chatRooms,
         });
       }
       router.push("/");
@@ -93,11 +102,16 @@ export default function LoginConatinerPresenter() {
   };
 
   return (
-    <LoginSignupForm
-      isButtonLoading={isButtonLoading}
-      isSignup={false}
-      onSubmit={onSubmit}
-      handleGoole={signInWithGoogle}
-    />
+    <>
+      <Head>
+        <title>Log in | Ourtown</title>
+      </Head>
+      <LoginSignupForm
+        isButtonLoading={isButtonLoading}
+        isSignup={false}
+        onSubmit={onSubmit}
+        handleGoole={signInWithGoogle}
+      />
+    </>
   );
 }

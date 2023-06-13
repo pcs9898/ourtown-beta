@@ -7,6 +7,8 @@ export interface IUser {
   avatarUrl?: string;
   likedPosts?: string[];
   likedDiscovers?: string[];
+  friends: string[];
+  chatRooms: string[];
 }
 
 export interface IPost {
@@ -31,4 +33,8 @@ export interface IComment {
 export interface IHeaderState {
   title?: string;
   profileUserName?: string;
+  profileUserTown?: string;
+  chatUserName?: string;
+  chatUserTown?: string;
+  chatUserId?: string;
 }

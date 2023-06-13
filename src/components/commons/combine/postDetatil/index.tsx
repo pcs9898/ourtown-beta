@@ -12,6 +12,7 @@ import {
   IconButton,
   Image,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   ChatBubbleOutline,
@@ -22,8 +23,9 @@ import {
 import AddCommentOrReview from "../formInput";
 import Link from "next/link";
 import formatTimeAgo from "@/src/commons/utils/formatTimgAgo";
-import { useRecoilValue } from "recoil";
-import { userState } from "@/src/commons/libraries/recoil/recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
+import { useRouter } from "next/router";
 
 interface IPostDetailProps {
   postData: {
@@ -58,19 +60,36 @@ export default function PostDetail({
     postData;
   const { username, avatarUrl } = userData;
   const currentUser = useRecoilValue(userState);
+  const setCurrentHeader = useSetRecoilState(headerState);
+  const router = useRouter();
+  const authorBgColor = useColorModeValue("teal.500", "teal.200");
+  const authorFontColor = useColorModeValue("#EEEFF1", "gray.800");
 
   return (
     <Box
       position="sticky"
       top={{ base: "3.5rem", md: "4.125rem" }}
-      zIndex={1200}
-      bgColor="white"
+      zIndex={200}
     >
-      <Card mb="2px" boxShadow="md">
+      <Card mb="2px">
         <CardHeader display="flex" px="1rem" py="0.75rem">
           <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">
-            <Link href={`/profile/${uid}`}>
-              <Avatar name={username} src={avatarUrl} />
+            <Link href={uid === currentUser?.uid ? "/me" : `/profile/${uid}`}>
+              <Avatar
+                cursor="pointer"
+                name={username}
+                src={avatarUrl}
+                onClick={() => {
+                  if (uid !== currentUser?.uid) {
+                    setCurrentHeader({
+                      profileUserName: username,
+                    });
+                    router.push(`/profile/${uid}`);
+                  } else {
+                    router.push("/me");
+                  }
+                }}
+              />
             </Link>
             <Box>
               <Flex gap="0.25rem">
@@ -79,9 +98,9 @@ export default function PostDetail({
                   <Highlight
                     query="Author"
                     styles={{
-                      bg: "main",
+                      bg: authorBgColor,
                       borderRadius: "base",
-                      color: "white",
+                      color: authorFontColor,
                       px: "0.375rem",
                       py: "0",
                       fontWeight: "semibold",
@@ -93,7 +112,7 @@ export default function PostDetail({
                   </Highlight>
                 )}
               </Flex>
-              <Flex color="subText" gap="0.25rem">
+              <Flex color="gray" gap="0.25rem">
                 <Text>{town}</Text>
                 <Text>‧</Text>
                 <Text>{formatTimeAgo(createdAt)}</Text>

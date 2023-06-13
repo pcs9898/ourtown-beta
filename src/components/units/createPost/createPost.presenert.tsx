@@ -15,6 +15,7 @@ import CustomTabs from "../../commons/combine/customTabs";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import PhotoIcon from "@mui/icons-material/Photo";
 import { ICreatePostPresenterProps } from "./createPost.types";
+import { useTranslation } from "react-i18next";
 
 export default function CreatePostPresenter({
   onClose,
@@ -27,6 +28,8 @@ export default function CreatePostPresenter({
   onChangeFile,
   previewImage,
 }: ICreatePostPresenterProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       <ModalHeader p="0">
@@ -48,7 +51,7 @@ export default function CreatePostPresenter({
             right="0"
             margin="auto"
           >
-            Create Post
+            {t("createPostTitle")}
           </Heading>
           <Button
             colorScheme="teal"
@@ -56,9 +59,8 @@ export default function CreatePostPresenter({
             isDisabled={!content}
             isLoading={isButtonLoading}
           >
-            Post
+            {t("postButton")}
           </Button>
-          {/* mutation link */}
         </Flex>
       </ModalHeader>
       <ModalBody
@@ -103,9 +105,12 @@ export default function CreatePostPresenter({
             },
           }}
         >
+          {/* Ask questions or talk about */}
           <Textarea
             flex="1"
-            placeholder={`Ask questions or talk about ${currentUser?.town} neighborhood`}
+            placeholder={`${t("createPostContentPlaceHolder1")} ${
+              currentUser?.town
+            } ${t("createPostContentPlaceHolder2")}`}
             variant="unstyled"
             // height="100%"
             onChange={(e) => setContent(e.target.value)}

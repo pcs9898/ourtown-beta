@@ -18,12 +18,14 @@ interface ICustomPopoverProps {
   avatarName?: string;
   children: ReactNode;
   settingData?: ReactNode;
+  avatarUrl?: string;
 }
 
 export default function CustomPopover({
   isNotifications,
   avatarName,
   children,
+  avatarUrl,
 }: ICustomPopoverProps) {
   return (
     <Popover>
@@ -36,14 +38,12 @@ export default function CustomPopover({
           />
         ) : (
           //   notification query onclick
-          <Avatar name={avatarName} cursor="pointer" />
+          <Avatar name={avatarName} src={avatarUrl} cursor="pointer" />
         )}
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent w="100%" p="0">
         <PopoverArrow />
-        <PopoverBody px="1rem" py="0.75rem">
-          {children}
-        </PopoverBody>
+        <PopoverBody p="0">{children}</PopoverBody>
       </PopoverContent>
     </Popover>
   );

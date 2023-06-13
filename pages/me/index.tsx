@@ -1,3 +1,5 @@
+import MeContainer from "@/src/components/units/me/me.container";
+
 export default function PostDetailPage() {
-  return <h1>post detail page</h1>;
+  return <MeContainer />;
 }

@@ -7,9 +7,9 @@ import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   //  "AIzaSyCuGAx87vTtMb7ENj4S0a8kiDA8sI2d7q8",
-  authDomain: "ourtown-beta.firebaseapp.com",
-  projectId: "ourtown-beta",
-  storageBucket: "ourtown-beta.appspot.com",
+  authDomain: "myproject-ourtown.firebaseapp.com",
+  projectId: "myproject-ourtown",
+  storageBucket: "myproject-ourtown.appspot.com",
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGINGSENDERID,
   // "149183681513",
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,

@@ -1,3 +1,5 @@
+import Discovercontainer from "@/src/components/units/discover/discover.container";
+
 export default function PostDetailPage() {
-  return <h1>post detail page</h1>;
+  return <Discovercontainer />;
 }

@@ -4,9 +4,12 @@ import {
   TabList,
   Tabs,
   useBreakpointValue,
+  useColorMode,
+  useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
-
+import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import React, { ReactNode } from "react";
 
 interface ICustomTabsProps {
@@ -16,7 +19,9 @@ interface ICustomTabsProps {
     | "mainCategory"
     | "dicoverBigCategory"
     | "discoverSmallRestaurantCategory"
-    | "profileCategory";
+    | "profileCategory"
+    | "meProfileCategory"
+    | "languageSettings";
 }
 
 function CustomTabs({
@@ -28,9 +33,47 @@ function CustomTabs({
     base: 0,
     "32.3125rem": "0.1rem",
   });
+  const router = useRouter();
+  const backgroundColor = useColorModeValue("white", "gray.800");
+  const borderBottomColor = useColorModeValue("#dbdbdb", "none");
+  const { colorMode } = useColorMode();
+  const { t, i18n } = useTranslation();
 
   const handleClickTab = (tab: string = "Daily") => {
     onClickTab(tab);
+  };
+
+  const getLanguageCategoryOptions = (ccategoryKindOptions: string) => {
+    switch (categoryKindOptions) {
+      case "mainCategory":
+        return [
+          t("mainCategoryTab1"),
+          t("mainCategoryTab2"),
+          t("mainCategoryTab3"),
+          t("mainCategoryTab4"),
+          t("mainCategoryTab5"),
+          t("mainCategoryTab6"),
+          t("mainCategoryTab7"),
+        ];
+      case "meProfileCategory":
+        return [
+          t("meProfileCategoryTab1"),
+          t("meProfileCategoryTab2"),
+          t("meProfileCategoryTab3"),
+        ];
+      case "profileCategory":
+        return [t("mainCategoryTab2")];
+      case "dicoverBigCategory":
+        return [
+          t("dicoverBigCategoryTab1"),
+          t("dicoverBigCategoryTab2"),
+          t("dicoverBigCategoryTab3"),
+          t("dicoverBigCategoryTab4"),
+          t("dicoverBigCategoryTab5"),
+        ];
+      default:
+        return [];
+    }
   };
 
   const getCategoryOptions = (categoryKindOptions: string): string[] => {
@@ -51,9 +94,7 @@ function CustomTabs({
           "Cafe/Dessert",
           "Salon/Beauty",
           "Hospital/Pharmacy",
-          "Household Goods",
           "Exercise",
-          "Cultural Activities",
         ];
       case "discoverSmallRestaurantCategory":
         return [
@@ -63,8 +104,10 @@ function CustomTabs({
           "Snacks",
           "Japanese",
         ];
+      case "meProfileCategory":
+        return ["Posts", "Liked", "Saved"];
       case "profileCategory":
-        return ["My Posts", "Liked Posts", "Bookmarked Places"];
+        return ["Posts"];
       default:
         return ["hi"];
     }
@@ -77,24 +120,31 @@ function CustomTabs({
         variant="solid-rounded"
         overflow="hidden"
         overflowX="scroll"
-        colorScheme="teal"
+        colorScheme={colorMode === "light" ? "teal" : "customTealForColorMode"}
         position={isCreatePost ? "unset" : "sticky"}
         top="3.5rem"
         maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
         zIndex={9}
-        bgColor="white"
+        bgColor={isCreatePost ? "none" : backgroundColor}
         sx={{
           "@media (max-width: 32.3125rem)": {
             "::-webkit-scrollbar": {
               display: "none",
             },
             "::-webkit-scrollbar-thumb": {},
-            borderBottom: isCreatePost ? "0" : "1px solid #dbdbdb",
+            borderBottom:
+              isCreatePost || categoryKindOptions === "languageSettings"
+                ? "0"
+                : `1px solid ${borderBottomColor}`,
           },
           "@media (min-width: 32.3125rem)": {
             "&:hover": {
               "::-webkit-scrollbar": {
-                display: "initial",
+                display:
+                  router.pathname.includes("/profile/") ||
+                  router.pathname === "/me"
+                    ? "none"
+                    : "initial",
                 height: "5px",
                 borderRadius: "50px",
               },
@@ -112,9 +162,13 @@ function CustomTabs({
       >
         <TabList
           mx={isCreatePost ? "0rem" : "1rem"}
-          mt={{ base: "0.1rem", md: "0.5rem" }}
+          mt={{
+            base: "0.1rem",
+            md: router.pathname.includes("/profile/") ? "0.1rem" : "0.5rem",
+          }}
           mb={{ base: "0.4rem", md: "0.5rem" }}
           pt="0.1rem"
+          display="flex"
         >
           {getCategoryOptions(categoryKindOptions).map((tab, index) => (
             <Tab
@@ -122,8 +176,11 @@ function CustomTabs({
               fontWeight="semibold"
               key={index}
               onClick={() => handleClickTab(tab)}
+              sx={{
+                whiteSpace: "nowrap", // 줄바꿈 방지
+              }}
             >
-              {tab}
+              {getLanguageCategoryOptions(categoryKindOptions)[index]}
             </Tab>
           ))}
         </TabList>

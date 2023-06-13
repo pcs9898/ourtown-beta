@@ -54,7 +54,7 @@ export default function DiscoverDetail({
         </Box>
       </Flex>
 
-      <FormInput isComment={false} />
+      {/* <FormInput isComment={false} /> */}
     </Card>
   );
 }

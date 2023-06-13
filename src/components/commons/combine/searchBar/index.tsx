@@ -12,6 +12,7 @@ import { Search } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 
 export default function SearchBar() {
   const currentUser = useRecoilValue(userState);
@@ -19,6 +20,7 @@ export default function SearchBar() {
     useRecoilState(searchQueryState);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!isMobile) {
@@ -57,8 +59,11 @@ export default function SearchBar() {
         <Search />
       </InputLeftElement>
       <Input
+        color="gray"
         variant="filled"
-        placeholder={`Search near ${currentUser?.city}`}
+        placeholder={`${t("searchBarsearchDesc1")} ${currentUser?.city} ${t(
+          "searchBarsearchDesc2"
+        )}`}
         onChange={handleInputChange}
         value={currentSearchQuery}
       />

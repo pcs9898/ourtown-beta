@@ -20,6 +20,7 @@ import CommentItem from "../../commons/combine/commentItem";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
 import PostDetailPresenter from "./postDetail.presenert";
 import CustomSkeleton from "../../commons/combine/customSkeleton";
+import Head from "next/head";
 
 export default function PostDetailContainer() {
   const router = useRouter();
@@ -224,9 +225,17 @@ export default function PostDetailContainer() {
   }
 
   return isLoading ? (
-    <CustomSkeleton skeletonType="postDetail" />
-  ) : (
-    data && (
+    <>
+      <Head>
+        <title>Loading...</title>
+      </Head>
+      <CustomSkeleton skeletonType="postDetail" />
+    </>
+  ) : data ? (
+    <>
+      <Head>
+        <title>{data.postData.content.substring(0, 10)}</title>
+      </Head>
       <PostDetailPresenter
         postData={data?.postData}
         userData={data?.userData}
@@ -234,6 +243,6 @@ export default function PostDetailContainer() {
         createComment={createComment}
         toggleLikePost={toggleLikePost}
       />
-    )
-  );
+    </>
+  ) : null;
 }

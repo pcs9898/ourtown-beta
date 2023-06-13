@@ -24,6 +24,7 @@ export default function PostDetailPresenter({
   return (
     <>
       <PostDetail
+        // @ts-ignore
         postData={postData}
         userData={userData}
         createComment={createComment}

@@ -1,8 +1,10 @@
 import { useRecoilState } from "recoil";
-import CustomTabs from "../../commons/combine/customTabs";
+import Profile from "../../commons/combine/profile";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
-import React, { useEffect, useState } from "react";
+import CustomTabs from "../../commons/combine/customTabs";
 import {
+  FieldPath,
+  Firestore,
   arrayRemove,
   arrayUnion,
   collection,
@@ -17,34 +19,21 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { useInfiniteQuery, useMutation } from "react-query";
 import { db } from "@/src/commons/libraries/firebase/firebase";
-import { useMutation, useInfiniteQuery } from "react-query";
-import PostItem from "../../commons/combine/postItem";
-import { Box, Spinner, VStack, useMediaQuery } from "@chakra-ui/react";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
-import CustomModal from "../../commons/combine/customModal";
-import CreatePostContainer from "../createPost/createPost.container";
-import InfiniteScroll from "react-infinite-scroll-component";
 import CustomSkeleton from "../../commons/combine/customSkeleton";
+import InfiniteScroll from "react-infinite-scroll-component";
 import CustomSpinner from "../../commons/combine/customSpinner";
 import EndMessage from "../../commons/combine/endMessage";
+import { Box, VStack } from "@chakra-ui/react";
+import PostItem from "../../commons/combine/postItem";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 
-function PostListContainer() {
-  const [category, setCategory] = useState("Daily");
+export default function MeContainer() {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
-  const [isMdScreen] = useMediaQuery("(min-width: 48em)");
-  const defaultCategory = "Daily";
-
-  useEffect(() => {
-    document.title = "Ourtown";
-  }, []);
-
-  const onClickTab = async (newCategory: string) => {
-    if (category !== newCategory) {
-      setCategory(newCategory);
-    }
-  };
+  const [currentTab, setCurrentTab] = useState("Posts"); // 현재 선택된 탭을 상태로 관리
 
   const toggleIsLikedMutation = useMutation(
     async (postId: string) => {
@@ -70,7 +59,7 @@ function PostListContainer() {
     },
     {
       onSuccess: ({ isLiked, postId }) => {
-        queryClient.setQueryData(["posts", category], (prevData: any) => {
+        queryClient.setQueryData(["posts", currentTab], (prevData: any) => {
           if (prevData) {
             if (isLiked) {
               setCurrentUser((prev: any) => ({
@@ -117,11 +106,45 @@ function PostListContainer() {
     toggleIsLikedMutation.mutate(postId);
   };
 
-  const fetchPostsByCategory = async (category: string, startAfterDoc) => {
+  const fetchMyLikedPosts = async () => {
+    const likedPosts = currentUser?.likedPosts || [];
+
+    const posts = [];
+    for (const postId of likedPosts) {
+      const postDocRef = doc(db, "posts", postId);
+      const postDocSnap = await getDoc(postDocRef);
+      if (postDocSnap.exists()) {
+        const postData = {
+          id: postDocSnap.id,
+          ...postDocSnap.data(),
+        };
+        // @ts-ignore
+        const userDocRef = doc(db, "users", postData.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = {
+            id: userDocSnap.id,
+            ...userDocSnap.data(),
+          }; // @ts-ignore
+          postData.user = userData;
+        }
+        posts.push(postData);
+      }
+    }
+
+    posts.sort((a, b) => b.createdAt - a.createdAt);
+
+    return {
+      posts,
+    };
+  };
+
+  const fetchMyPosts = async (startAfterDoc) => {
     const postsRef = collection(db, "posts");
+
     let q = query(
-      collection(db, "posts"),
-      where("category", "==", category),
+      postsRef,
+      where("uid", "==", currentUser?.uid),
       orderBy("createdAt", "desc")
     );
 
@@ -154,7 +177,6 @@ function PostListContainer() {
 
     const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-    // 포스트가 4개 미만인 경우에는 더 이상의 페이지가 없음을 알림
     const hasNextPage = posts.length >= 5;
 
     return {
@@ -163,17 +185,32 @@ function PostListContainer() {
     };
   };
 
-  const { data, fetchNextPage, hasNextPage, isLoading, isError } =
+  const { data, fetchNextPage, hasNextPage, isLoading, isError, error } =
     useInfiniteQuery(
-      ["posts", category],
-      ({ pageParam }) => fetchPostsByCategory(category, pageParam),
+      ["posts", currentTab],
+      // @ts-ignore
+      ({ pageParam }) => {
+        if (currentTab === "Posts") {
+          return fetchMyPosts(pageParam);
+        } else if (currentTab === "Liked") {
+          return fetchMyLikedPosts();
+        }
+        return Promise.resolve([]);
+      },
       {
+        // @ts-ignore
         getNextPageParam: (lastPage) => lastPage.lastDoc,
-        keepPreviousData: true,
       }
     );
 
-  const postList = data?.pages?.flatMap((page) => page.posts) ?? [];
+  const postList =
+    currentTab === "Posts"
+      ? // @ts-ignore
+        data?.pages?.flatMap((page) => page.posts) ?? []
+      : data?.pages
+          // @ts-ignore
+          ?.flatMap((page) => page.posts)
+          .sort((a, b) => b.createdAt - a.createdAt) ?? [];
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -186,27 +223,43 @@ function PostListContainer() {
     }
   };
 
+  const onClickTab = (tabName: string) => {
+    setCurrentTab(tabName);
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isLoading, hasNextPage, fetchNextPage]);
 
   return (
     <>
       <Head>
-        <title>Ourtown</title>
+        <title>Me</title>
       </Head>
-      <CustomTabs categoryKindOptions="mainCategory" onClickTab={onClickTab} />
+      <Box
+        position="sticky"
+        top="3.5rem"
+        maxHeight="14rem" // 상단 NavLayout의 높이를 제외한 높이
+        zIndex={9}
+        bgColor="white"
+      >
+        <Profile profileData={currentUser} isMine={true} />
+        <CustomTabs
+          categoryKindOptions="meProfileCategory"
+          onClickTab={onClickTab}
+        />
+      </Box>
       {isLoading ? (
         <CustomSkeleton skeletonType="postList" />
-      ) : (
-        // <Box h="100%" mb="5rem">
+      ) : currentTab !== ("Saved" || "Liked") ? (
         <>
           <InfiniteScroll
             dataLength={postList.length}
             next={fetchNextPage}
             hasMore={hasNextPage ?? false}
-            // loader={<CustomSpinner spinnerType="postListLoader" />}
             loader={<CustomSpinner spinnerType="postListLoader" />}
             endMessage={<EndMessage />}
           >
@@ -215,27 +268,21 @@ function PostListContainer() {
               px={{ base: "0px", md: "2px" }}
               mb={{ base: "0", md: "0" }}
             >
-              {postList.map((postItemData) => (
-                <PostItem
-                  key={postItemData.id}
-                  postItemData={postItemData}
-                  toggleLikePost={toggleLikePost}
-                />
-              ))}
+              {postList.map((postItemData) => {
+                return (
+                  <PostItem
+                    key={postItemData.id}
+                    postItemData={postItemData}
+                    toggleLikePost={toggleLikePost}
+                  />
+                );
+              })}
             </VStack>
           </InfiniteScroll>
-
-          <CustomModal
-            isCreatePost={true}
-            isFixSize={true}
-            isButtonHideMdScreen={isMdScreen ?? true}
-          >
-            <CreatePostContainer />
-          </CustomModal>
         </>
+      ) : (
+        <EndMessage />
       )}
     </>
   );
 }
-
-export default PostListContainer;

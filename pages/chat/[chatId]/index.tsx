@@ -1,3 +1,5 @@
+import ChatDetailContainer from "@/src/components/units/chatDetail/chatDetail.container";
+
 export default function PostDetailPage() {
-  return <h1>post detail page</h1>;
+  return <ChatDetailContainer />;
 }

@@ -1,3 +1,4 @@
+import { db } from "@/src/commons/libraries/firebase/firebase";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
 import { headerState, userState } from "@/src/commons/libraries/recoil/recoil";
 import formatTimeAgo from "@/src/commons/utils/formatTimgAgo";
@@ -15,6 +16,7 @@ import {
   IconButton,
   Image,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   ChatBubbleOutline,
@@ -24,7 +26,8 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useTranslation } from "react-i18next";
 
 interface IPostItemProps {
   postItemData: {
@@ -36,9 +39,10 @@ interface IPostItemProps {
     content: string;
     imageUrl: string;
     uid: string;
+    category: string;
     user: {
       id: string;
-      avatarUrl: string;
+      avatarUrl?: string;
       username: string;
       likedPosts: string[];
     };
@@ -51,7 +55,7 @@ export default function PostItem({
   toggleLikePost,
 }: IPostItemProps) {
   const {
-    id,
+    id: postId,
     town,
     createdAt,
     likeCount,
@@ -59,29 +63,42 @@ export default function PostItem({
     content,
     uid,
     imageUrl,
+    category,
     user: { avatarUrl, username },
   } = postItemData;
-  const currentUser = useRecoilValue(userState);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
+  const authorBgColor = useColorModeValue("teal.500", "teal.200");
+  const authorFontColor = useColorModeValue("white", "#1B212D");
   const setCurrentHeader = useSetRecoilState(headerState);
   const router = useRouter();
+  const { t } = useTranslation();
 
   const onClickPostDetail = async () => {
     await setCurrentHeader({
-      title: `${username}'s Post`,
+      title: `${username}${t("postDetailHeaderTitle")}`,
     });
 
-    router.push(`/posts/${id}`);
+    router.push(`/posts/${postId}`);
   };
 
   return (
-    <Card width="100%" boxShadow="md">
+    <Card width="100%">
       <CardHeader display="flex" px="1rem" py="0.75rem">
         <Flex flex="1" gap="0.75rem" alignItems="center" flexWrap="wrap">
           <Avatar
-            as={Link}
-            href={`/profile/${uid}`}
+            cursor="pointer"
             name={username}
             src={avatarUrl}
+            onClick={() => {
+              if (uid !== currentUser?.uid) {
+                setCurrentHeader({
+                  profileUserName: username,
+                });
+                router.push(`/profile/${uid}`);
+              } else {
+                router.push("/me");
+              }
+            }}
           />
 
           <Box>
@@ -93,9 +110,9 @@ export default function PostItem({
                 <Highlight
                   query="Author"
                   styles={{
-                    bg: "main",
+                    bg: authorBgColor,
                     borderRadius: "base",
-                    color: "white",
+                    color: authorFontColor,
                     px: "0.375rem",
                     py: "0",
                     fontWeight: "semibold",
@@ -107,7 +124,7 @@ export default function PostItem({
                 </Highlight>
               )}
             </Flex>
-            <Flex color="subText" gap="0.25rem">
+            <Flex color="gray" gap="0.25rem">
               <Text>{town}</Text>
               <Text>‧</Text>
               <Text>{formatTimeAgo(createdAt)}</Text>
@@ -141,13 +158,13 @@ export default function PostItem({
         <Button
           variant="ghost"
           leftIcon={
-            currentUser?.likedPosts?.includes(id) ? (
+            currentUser?.likedPosts?.includes(postId) ? (
               <Favorite />
             ) : (
               <FavoriteBorder />
             )
           }
-          onClick={() => toggleLikePost(id)}
+          onClick={() => toggleLikePost(postId)}
         >
           {" "}
           {likeCount}

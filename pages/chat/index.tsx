@@ -1,3 +1,5 @@
+import ChatListContainer from "@/src/components/units/chatList/chatList.container";
+
 export default function PostDetailPage() {
-  return <h1>post detail page</h1>;
+  return <ChatListContainer />;
 }

@@ -10,6 +10,8 @@ import {
   useBreakpointValue,
   useToast,
   LinkOverlay,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   ArrowBackIosNew,
@@ -26,6 +28,12 @@ import CustomPopover from "../../combine/customPopover";
 import { auth } from "@/src/commons/libraries/firebase/firebase";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import CustomModal from "../../combine/customModal";
+import SettingsConatiner from "@/src/components/units/settrings";
+import { useTranslation } from "react-i18next";
+import Profile from "../../combine/profile";
+import LogoutIcon from "@mui/icons-material/Logout";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 export default function HeaderLayout() {
   const router = useRouter();
@@ -34,15 +42,22 @@ export default function HeaderLayout() {
   const currentHeader = useRecoilValue(headerState);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const pathname = router.pathname;
+  const backgroundColor = useColorModeValue("white", "gray.800");
+  const borderBottomColor = useColorModeValue("#dbdbdb", "none");
+  const { t } = useTranslation();
 
   const isHome = pathname === "/";
   const isPostDetail = pathname.startsWith("/posts/");
   const isSearch = pathname === "/search";
-  const isDiscover = pathname.startsWith("/discover");
-  const isChat = pathname.startsWith("/chat");
+  const isDiscover = pathname === "/discover";
+  const isChat = pathname === "/chat";
+  const isChatDetail = pathname.startsWith("/chat/");
   const isMe = pathname === "/me";
-  const isProfile = pathname.includes("/me") || pathname.includes("/profile");
+  const isProfile = pathname.includes("/profile");
 
+  const referrer = router.query.referrer;
+
+  console.log(referrer);
   const handleLogout = async () => {
     try {
       await auth.signOut().then(() => {
@@ -77,24 +92,24 @@ export default function HeaderLayout() {
       px="1rem"
       py="0.5rem"
       height="3.5rem"
-      bgColor="white"
-      position="sticky"
+      bgColor={backgroundColor}
+      position="fixed"
       top={0}
-      zIndex={10}
+      zIndex={210}
+      w="100%"
+      maxW="71.875rem"
       sx={{
         "@media (max-width: 32.3125rem)": {
           "::-webkit-scrollbar-thumb": {},
           borderBottom:
-            router.pathname === "/" || router.pathname === "/search"
-              ? "0"
-              : "1px solid #dbdbdb",
+            pathname === "/chat" ? `1px solid ${borderBottomColor}` : "0",
         },
       }}
     >
       <Flex w="100%" justifyContent="space-between" alignItems="center">
         {!isMobile && (
           <Flex gap="0.75rem">
-            <Button variant="ghost" p="0" as={Link} href="/">
+            <Button variant="ghost" p="0" as={Link} href="/" colorScheme="teal">
               <Image
                 src="/logo.svg"
                 alt="Logo Image"
@@ -154,7 +169,9 @@ export default function HeaderLayout() {
         )}
         {isDiscover && isMobile && (
           <>
-            <Heading h="2.5rem">Discover</Heading>{" "}
+            <Heading fontSize="1.5rem" alignSelf="center">
+              {t("mobileHeaderDiscover")}
+            </Heading>{" "}
             <IconButton aria-label="Bookmark Icon" variant="ghost">
               <BookmarkBorder />
             </IconButton>{" "}
@@ -162,20 +179,88 @@ export default function HeaderLayout() {
         )}
         {isChat && isMobile && (
           <>
-            <Heading h="2.5rem">Chats</Heading>
+            <Heading fontSize="1.5rem" alignSelf="center">
+              {t("mobileHeaderChats")}
+            </Heading>
             <IconButton aria-label="MoreHoriz Icon" variant="ghost">
               <MoreHoriz />
             </IconButton>{" "}
           </>
         )}
+
+        {isChatDetail && isMobile && (
+          <>
+            <IconButton
+              variant="ghost"
+              aria-label="Back Button"
+              icon={<ArrowBackIosNew />}
+              onClick={() => router.back()}
+            />
+            <Flex
+              textAlign="center"
+              justifyContent="center"
+              alignItems="center"
+              position="absolute"
+              width="100%"
+              left="0"
+              right="0"
+              margin="auto"
+              zIndex="1"
+              as={Link}
+              href={`/profile/${currentHeader?.chatUserId}`}
+              gap="0.25rem"
+            >
+              <Heading>{currentHeader?.chatUserName}</Heading>
+              <Text fontSize="1.125rem" color="gray">
+                ‧
+              </Text>
+              <Text fontSize="1.125rem" color="gray">
+                {currentHeader?.chatUserTown}
+              </Text>
+            </Flex>
+          </>
+        )}
+
+        {isMe && isMobile && (
+          <>
+            <Flex fontSize="1.5rem" gap="0.25rem" alignItems="center">
+              <Heading fontSize="1.5rem" alignSelf="center">
+                {currentUser?.username}
+              </Heading>{" "}
+              <Text fontSize="1.5rem" color="gray">
+                ‧
+              </Text>
+              <Text fontSize="1.25rem" color="gray">
+                {currentUser?.town}
+              </Text>
+            </Flex>
+          </>
+        )}
+        {isMe && (
+          <CustomModal isFixSize={false} isSettings={true}>
+            <SettingsConatiner />
+          </CustomModal>
+        )}
         {isProfile && isMobile && (
           <>
-            <Heading h="2.5rem">
-              {isMe ? currentUser?.username : currentHeader?.profileUserName}
+            <IconButton
+              variant="ghost"
+              aria-label="Back Button"
+              icon={<ArrowBackIosNew />}
+              onClick={() => router.back()}
+            />
+            <Heading
+              fontSize="1.25rem"
+              textAlign="center"
+              position="absolute"
+              width="100%"
+              left="0"
+              right="0"
+              margin="auto"
+              zIndex="-1"
+            >
+              {currentHeader?.profileUserName}`s Profile
             </Heading>
-            <IconButton aria-label="Settings Icon" variant="ghost">
-              <Settings />
-            </IconButton>
           </>
         )}
 
@@ -185,8 +270,33 @@ export default function HeaderLayout() {
             <CustomPopover
               isNotifications={false}
               avatarName={currentUser?.username}
+              avatarUrl={currentUser?.avatarUrl}
             >
-              <Button onClick={handleLogout}>로그아웃</Button>
+              <Flex flexDir="column" h="100%">
+                {currentUser && (
+                  <Profile
+                    isMine={true}
+                    profileData={currentUser}
+                    isPcHeaderAvatar={true}
+                  />
+                )}
+                <Flex justifyContent="space-between" px="1rem" pb="0.75rem">
+                  <CustomModal isFixSize={false} isPcSettings={true}>
+                    <SettingsConatiner />
+                  </CustomModal>
+
+                  <IconButton aria-label="Question" variant="ghost">
+                    <QuestionMarkIcon />
+                  </IconButton>
+                  <IconButton
+                    variant="ghost"
+                    aria-label="Log out"
+                    onClick={handleLogout}
+                  >
+                    <LogoutIcon />
+                  </IconButton>
+                </Flex>
+              </Flex>
             </CustomPopover>
           </Flex>
         )}

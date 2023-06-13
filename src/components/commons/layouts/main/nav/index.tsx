@@ -1,4 +1,4 @@
-import { Box, Button, Flex, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, VStack, useColorModeValue } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import {
   AddOutlined,
@@ -12,6 +12,7 @@ import CreatePostContainer from "@/src/components/units/createPost/createPost.co
 import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 import { headerState } from "@/src/commons/libraries/recoil/recoil";
+import { useTranslation } from "react-i18next";
 
 const NavButton = styled(Button)`
   font-size: 1.125rem;
@@ -34,6 +35,10 @@ export default function NavLayout() {
   const router = useRouter();
   const pathname = router.pathname;
   const setCurrentHeader = useSetRecoilState(headerState);
+  const inactiveIconColor = useColorModeValue("gray.800", "#EEEFF1");
+  const activeIconColor = useColorModeValue("teal.500", "teal.200");
+
+  const { t } = useTranslation();
 
   return (
     <VStack
@@ -51,33 +56,39 @@ export default function NavLayout() {
     >
       <NavButton
         color={
-          pathname === "/" || pathname.includes("/posts/") ? "teal" : "black"
+          pathname === "/" || pathname.includes("/posts/")
+            ? activeIconColor
+            : inactiveIconColor
         }
         as={Link}
         href="/"
       >
         <HomeOutlined />
-        Home
+        {t("pcNavHome")}
       </NavButton>
 
       <NavButton
-        color={pathname.startsWith("/discover") ? "teal" : "black"}
+        color={
+          pathname.startsWith("/discover") ? activeIconColor : inactiveIconColor
+        }
         as={Link}
         href="/discover"
       >
         <MapOutlined />
-        Discover
+        {t("pcNavDiscover")}
       </NavButton>
       <NavButton
-        color={pathname.startsWith("/chat") ? "teal" : "black"}
+        color={
+          pathname.startsWith("/chat") ? activeIconColor : inactiveIconColor
+        }
         as={Link}
         href="/chat"
       >
         <ChatBubbleOutline />
-        Chats
+        {t("pcNavChats")}
       </NavButton>
 
-      <CustomModal isFixSize={true}>
+      <CustomModal isFixSize={true} isCreatePost={true}>
         <CreatePostContainer />
       </CustomModal>
     </VStack>

@@ -40,14 +40,18 @@ export default function Layouts({ children }: ILayoutsProps) {
             setCurrentUser({
               uid: user.uid,
               email: user.email || "",
+              avatarUrl: userData.avatarUrl,
               username: userData.username,
               city: userData.city,
               town: userData.town,
               likedPosts: userData.likedPosts,
               likedDiscovers: userData.likedDiscovers,
+              friends: userData.friends,
+              chatRooms: userData.chatRooms,
             });
-
-            setIsloading(false);
+            if (router.pathname === "/login" || router.pathname === "/signup")
+              router.push("/");
+            // setIsloading(false);
           } else {
             setCurrentUser(null);
           }
@@ -81,7 +85,13 @@ export default function Layouts({ children }: ILayoutsProps) {
     </Box>
   ) : (
     currentUser && (
-      <Box maxW="71.875rem" margin="0 auto" minH="15rem">
+      <Box
+        maxW="71.875rem"
+        margin="0 auto"
+        minH="15rem"
+        marginTop={{ base: "3.5rem", md: "4rem" }}
+        h="100%"
+      >
         <>
           <HeaderLayout />
           <MainLayout>{children}</MainLayout>
