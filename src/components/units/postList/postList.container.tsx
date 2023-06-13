@@ -28,6 +28,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import CustomSkeleton from "../../commons/combine/customSkeleton";
 import CustomSpinner from "../../commons/combine/customSpinner";
 import EndMessage from "../../commons/combine/endMessage";
+import Head from "next/head";
 
 function PostListContainer() {
   const [category, setCategory] = useState("Daily");
@@ -35,7 +36,9 @@ function PostListContainer() {
   const [isMdScreen] = useMediaQuery("(min-width: 48em)");
   const defaultCategory = "Daily";
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    document.title = "Ourtown";
+  }, []);
 
   const onClickTab = async (newCategory: string) => {
     if (category !== newCategory) {
@@ -136,7 +139,7 @@ function PostListContainer() {
         id: docSnapshot.id,
         ...docSnapshot.data(),
       };
-
+      // @ts-ignore
       const userDoc = await getDoc(doc(db, "users", postData.uid));
       const userData = {
         id: userDoc.id,
@@ -190,6 +193,9 @@ function PostListContainer() {
 
   return (
     <>
+      <Head>
+        <title>Ourtown</title>
+      </Head>
       <CustomTabs categoryKindOptions="mainCategory" onClickTab={onClickTab} />
       {isLoading ? (
         <CustomSkeleton skeletonType="postList" />

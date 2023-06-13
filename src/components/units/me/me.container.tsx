@@ -29,6 +29,7 @@ import EndMessage from "../../commons/combine/endMessage";
 import { Box, VStack } from "@chakra-ui/react";
 import PostItem from "../../commons/combine/postItem";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 export default function MeContainer() {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
@@ -117,13 +118,14 @@ export default function MeContainer() {
           id: postDocSnap.id,
           ...postDocSnap.data(),
         };
+        // @ts-ignore
         const userDocRef = doc(db, "users", postData.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           const userData = {
             id: userDocSnap.id,
             ...userDocSnap.data(),
-          };
+          }; // @ts-ignore
           postData.user = userData;
         }
         posts.push(postData);
@@ -160,7 +162,7 @@ export default function MeContainer() {
         id: docSnapshot.id,
         ...docSnapshot.data(),
       };
-
+      // @ts-ignore
       const userDoc = await getDoc(doc(db, "users", postData.uid));
       const userData = {
         id: userDoc.id,
@@ -186,6 +188,7 @@ export default function MeContainer() {
   const { data, fetchNextPage, hasNextPage, isLoading, isError, error } =
     useInfiniteQuery(
       ["posts", currentTab],
+      // @ts-ignore
       ({ pageParam }) => {
         if (currentTab === "Posts") {
           return fetchMyPosts(pageParam);
@@ -195,14 +198,17 @@ export default function MeContainer() {
         return Promise.resolve([]);
       },
       {
+        // @ts-ignore
         getNextPageParam: (lastPage) => lastPage.lastDoc,
       }
     );
 
   const postList =
     currentTab === "Posts"
-      ? data?.pages?.flatMap((page) => page.posts) ?? []
+      ? // @ts-ignore
+        data?.pages?.flatMap((page) => page.posts) ?? []
       : data?.pages
+          // @ts-ignore
           ?.flatMap((page) => page.posts)
           .sort((a, b) => b.createdAt - a.createdAt) ?? [];
 
@@ -230,6 +236,9 @@ export default function MeContainer() {
 
   return (
     <>
+      <Head>
+        <title>Me</title>
+      </Head>
       <Box
         position="sticky"
         top="3.5rem"

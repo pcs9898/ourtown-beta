@@ -144,7 +144,7 @@ export default function PostItem({
           <Image
             height="12rem"
             width="100%"
-            objectFit="fill"
+            objectFit="cover"
             src={imageUrl}
             alt="Chakra UI"
           />

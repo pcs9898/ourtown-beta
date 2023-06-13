@@ -32,6 +32,8 @@ import SendIcon from "@mui/icons-material/Send";
 import PhotoIcon from "@mui/icons-material/Photo";
 import Link from "next/link";
 import ChatMessage from "../../commons/combine/chatMessage";
+import Head from "next/head";
+import CustomSpinner from "../../commons/combine/customSpinner";
 
 export default function ChatDetailContainer() {
   const router = useRouter();
@@ -75,8 +77,9 @@ export default function ChatDetailContainer() {
     );
 
     if (otherUserId) {
+      // @ts-ignore
       const userData = await fetchUserData(otherUserId);
-
+      // @ts-ignore
       setCurrentHeader((prev) => ({
         ...prev,
         chatUserName: userData?.username,
@@ -94,6 +97,7 @@ export default function ChatDetailContainer() {
     const messagesData = snapshot.val() || {};
     const messagesArray = Object.entries(messagesData).map(([id, message]) => ({
       id,
+      // @ts-ignore
       ...message,
     }));
 
@@ -151,6 +155,7 @@ export default function ChatDetailContainer() {
         const messagesArray = Object.entries(messagesData).map(
           ([id, message]) => ({
             id,
+            // @ts-ignore
             ...message,
           })
         );
@@ -166,90 +171,122 @@ export default function ChatDetailContainer() {
   }, [chatId]);
 
   if (isUserLoading && isMessagesLoading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <CustomSpinner spinnerType="layout" />
+      </>
+    );
   }
 
   return (
-    <Box
-      width="100%"
-      h="calc(100vh - 8.1rem)"
-      boxShadow={{ base: "none", md: "base" }}
-      borderRadius="base"
-      // marginTop="0.625rem"
-      overflowX="scroll"
-    >
-      <Flex
-        display={{ base: "none", md: "flex" }}
-        justifyContent="center"
-        alignItems="center"
+    <>
+      <Head>
+        <title>
+          {
+            // @ts-ignore
+            userData?.username
+          }
+        </title>
+      </Head>
+      <Box
         width="100%"
-        as={Link}
-        href={`/profile/${userData?.id}`}
-        gap="0.25rem"
-        borderBottom="1px solid #dbdbdb"
-        pos="sticky"
-        top="0"
-        bgColor={backgroundColor}
+        h="calc(100vh - 8.1rem)"
+        boxShadow={{ base: "none", md: "base" }}
+        borderRadius="base"
+        // marginTop="0.625rem"
+        overflowX="scroll"
       >
-        <Heading>{userData?.username}</Heading>
-        <Text fontSize="1.125rem" color="gray">
-          ‧
-        </Text>
-        <Text fontSize="1.125rem" color="gray">
-          {userData?.town}
-        </Text>
-      </Flex>
-
-      {!isMessagesLoading && (
-        <VStack w="100%" pb="3rem">
-          {messages.map((message) =>
-            message.senderId === currentUser?.uid ? (
-              <ChatMessage
-                isMine={true}
-                key={message.id}
-                chatMessageData={message}
-              />
-            ) : (
-              <ChatMessage
-                isMine={false}
-                key={message.id}
-                chatMessageData={message}
-              />
-            )
-          )}
-          <div ref={messagesEndRef} />{" "}
-          {/* 스크롤을 최하단으로 내리기 위한 빈 div */}
-        </VStack>
-      )}
-
-      <Flex
-        position="fixed"
-        bottom="4rem"
-        gap="0.75rem"
-        px="1rem"
-        py="0.75rem"
-        width="100%"
-        maxW="36.25rem"
-        bgColor={backgroundColor}
-      >
-        <IconButton aria-label="Photo Icon">
-          <PhotoIcon />
-        </IconButton>
-        <Input
-          variant="filled"
-          fontWeight="semibold"
-          color="gray"
-          value={newMessage}
-          onChange={handleInputChange}
-        />
-        <IconButton
-          aria-label="Send Message"
-          onClick={sendMessage}
-          isDisabled={!newMessage}
+        <Flex
+          display={{ base: "none", md: "flex" }}
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          as={Link}
+          // @ts-ignore
+          href={`/profile/${userData?.id}`}
+          gap="0.25rem"
+          borderBottom="1px solid #dbdbdb"
+          pos="sticky"
+          top="0"
+          bgColor={backgroundColor}
         >
-          <SendIcon />
-        </IconButton>
-      </Flex>
-    </Box>
+          <Heading>
+            {
+              // @ts-ignore
+              userData?.username
+            }
+          </Heading>
+          <Text fontSize="1.125rem" color="gray">
+            ‧
+          </Text>
+          <Text fontSize="1.125rem" color="gray">
+            {
+              // @ts-ignore
+              userData?.town
+            }
+          </Text>
+        </Flex>
+
+        {!isMessagesLoading && (
+          <VStack w="100%" pb="3rem">
+            {messages.map((message) =>
+              // @ts-ignore
+              message.senderId === currentUser?.uid ? (
+                // @ts-ignore
+                <ChatMessage
+                  isMine={true}
+                  // @ts-ignore
+                  key={message.id}
+                  // @ts-ignore
+                  chatMessageData={message}
+                />
+              ) : (
+                <ChatMessage
+                  isMine={false}
+                  // @ts-ignore
+                  key={message.id}
+                  // @ts-ignore
+                  chatMessageData={message}
+                />
+              )
+            )}
+            <div ref={messagesEndRef} />{" "}
+            {/* 스크롤을 최하단으로 내리기 위한 빈 div */}
+          </VStack>
+        )}
+
+        <Flex
+          position="fixed"
+          bottom="4rem"
+          gap="0.75rem"
+          px="1rem"
+          py="0.75rem"
+          width="100%"
+          maxW="36.25rem"
+          bgColor={backgroundColor}
+        >
+          <IconButton aria-label="Photo Icon">
+            <PhotoIcon />
+          </IconButton>
+          <Input
+            variant="filled"
+            fontWeight="semibold"
+            color="gray"
+            value={newMessage}
+            onChange={handleInputChange}
+          />
+          <IconButton
+            aria-label="Send Message"
+            onClick={sendMessage}
+            isDisabled={!newMessage}
+          >
+            <SendIcon />
+          </IconButton>
+        </Flex>
+      </Box>
+    </>
   );
 }

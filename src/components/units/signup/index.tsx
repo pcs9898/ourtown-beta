@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { useState } from "react";
+import Head from "next/head";
 
 const reverseGeocode = async (
   lat: number,
@@ -169,6 +170,9 @@ export default function SignupContainerPresenter() {
 
   return (
     <>
+      <Head>
+        <title>Sign Up | Ourtown</title>
+      </Head>
       <LoginSignupForm
         isButtonLoading={isButtonLoading}
         isSignup={true}

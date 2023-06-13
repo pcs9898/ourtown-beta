@@ -49,8 +49,9 @@ export default function Layouts({ children }: ILayoutsProps) {
               friends: userData.friends,
               chatRooms: userData.chatRooms,
             });
-
-            setIsloading(false);
+            if (router.pathname === "/login" || router.pathname === "/signup")
+              router.push("/");
+            // setIsloading(false);
           } else {
             setCurrentUser(null);
           }

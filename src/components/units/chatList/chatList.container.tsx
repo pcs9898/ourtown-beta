@@ -5,8 +5,16 @@ import { getDatabase, ref, onValue, off, get } from "firebase/database";
 import { useQuery } from "react-query";
 import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { db } from "@/src/commons/libraries/firebase/firebase";
-import { Flex, Heading, VStack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  VStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import ChatItem from "../../commons/combine/chatItem";
+import Head from "next/head";
+import CustomSpinner from "../../commons/combine/customSpinner";
 
 export default function ChatListContainer() {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
@@ -46,11 +54,13 @@ export default function ChatListContainer() {
 
       if (chatroomData.messages) {
         const sortedObjects = Object.values(chatroomData.messages).sort(
+          // @ts-ignore
           (a, b) => b.timestamp - a.timestamp
         );
         const latestObject = sortedObjects[0];
-
+        // @ts-ignore
         userData.lastMessage = latestObject.message;
+        // @ts-ignore
         userData.lastMessageTimestamp = latestObject.timestamp;
       }
 
@@ -69,28 +79,45 @@ export default function ChatListContainer() {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Head>
+          <title>Chats</title>
+        </Head>
+        <CustomSpinner spinnerType="layout" />
+      </>
+    );
   }
 
   return (
     <>
-      <Flex
-        display={{ base: "none", md: "flex" }}
-        justifyContent="flex-start"
-        alignItems="center"
-        width="100%"
-        gap="0.25rem"
-        pos="sticky"
-        top="0"
-        bgColor={backgroundColor}
-      >
-        <Heading>Chats</Heading>
-      </Flex>
-      <VStack width="100%" spacing={0}>
-        {chatroomsData?.map((chatItemData, i) => (
-          <ChatItem key={chatItemData.chatroomId} chatItemData={chatItemData} />
-        ))}
-      </VStack>
+      <Head>
+        <title>Chats</title>
+      </Head>
+      <Box h="80vh" boxShadow={{ base: 0, md: "base" }}>
+        <Flex
+          display={{ base: "none", md: "flex" }}
+          justifyContent="flex-start"
+          alignItems="center"
+          width="100%"
+          gap="0.25rem"
+          pos="sticky"
+          top="0"
+          px="1rem"
+          py="0.75rem"
+          bgColor={backgroundColor}
+        >
+          <Heading>Chats</Heading>
+        </Flex>
+        <VStack width="100%" spacing={0}>
+          {chatroomsData?.map((chatItemData, i) => (
+            <ChatItem
+              key={chatItemData.chatroomId}
+              chatItemData={chatItemData}
+            />
+          ))}
+        </VStack>
+      </Box>
     </>
   );
 }

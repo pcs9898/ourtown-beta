@@ -9,7 +9,8 @@ interface ISectionLayoutProps {
 export default function SectionLayout({ children }: ISectionLayoutProps) {
   const { pathname } = useRouter();
 
-  const isWideSection = pathname === "/discover" || pathname === "/chat";
+  const isWideSection = pathname === "/discover";
+  // || pathname === "/chat";
 
   return (
     <Box

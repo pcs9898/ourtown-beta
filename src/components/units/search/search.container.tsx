@@ -33,6 +33,7 @@ import CustomSpinner from "../../commons/combine/customSpinner";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { queryClient } from "@/src/commons/libraries/react-query/react-query";
 import { subtract } from "loadsh";
+import Head from "next/head";
 
 export default function SearchContainer() {
   const [currentSearchQuery, setCurrentSearchQuery] =
@@ -197,6 +198,7 @@ export default function SearchContainer() {
         }
       },
       {
+        // @ts-ignore
         getNextPageParam: (lastPage) => lastPage.lastDoc,
         // keepPreviousData: true,
       }
@@ -230,6 +232,9 @@ export default function SearchContainer() {
 
   return (
     <>
+      <Head>
+        <title>Search</title>
+      </Head>
       <CustomTabs categoryKindOptions="mainCategory" onClickTab={onClickTab} />
       {isLoading ? (
         <CustomSkeleton skeletonType="postList" />

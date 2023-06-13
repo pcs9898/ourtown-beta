@@ -32,6 +32,7 @@ import { queryClient } from "@/src/commons/libraries/react-query/react-query";
 import { getDatabase, ref, push, set, child, get } from "firebase/database";
 import { useEffect } from "react";
 import { IUser } from "@/src/commons/types/globalTypes";
+import Head from "next/head";
 
 export default function ProfileDetailContainer() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function ProfileDetailContainer() {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
 
   const toggleIsLikedMutation = useMutation(
+    // @ts-ignore
     async (postId: string, category: string) => {
       const isLiked = currentUser?.likedPosts?.includes(postId);
 
@@ -106,6 +108,7 @@ export default function ProfileDetailContainer() {
   );
 
   const toggleLikePost = (postId: string, category: string) => {
+    // @ts-ignore
     toggleIsLikedMutation.mutate(postId, category);
   };
 
@@ -145,6 +148,7 @@ export default function ProfileDetailContainer() {
         id: docSnapshot.id,
         ...docSnapshot.data(),
       };
+      // @ts-ignore
       const userDocRef = doc(db, "users", postData.uid);
       const userDocSnap = await getDoc(userDocRef);
       const userData = userDocSnap.data();
@@ -249,6 +253,7 @@ export default function ProfileDetailContainer() {
   };
 
   const { isLoading: isUserDataLoading, data: userData } =
+    // @ts-ignore
     useUserProfile(profileId);
 
   const {
@@ -256,6 +261,7 @@ export default function ProfileDetailContainer() {
     data: postsData,
     hasNextPage,
     fetchNextPage,
+    // @ts-ignore
   } = useUserPosts(profileId);
 
   const postList = postsData?.pages?.flatMap((page) => page.posts) ?? [];
@@ -357,17 +363,30 @@ export default function ProfileDetailContainer() {
         bgColor="white"
       >
         {isUserDataLoading ? (
-          <CustomSkeleton skeletonType="profileDetail" />
+          <>
+            {/* <Head>
+              <title>Loading...</title>
+            </Head> */}
+            <CustomSkeleton skeletonType="profileDetail" />
+          </>
         ) : (
           <>
+            <Head>
+              <title>{userData.username}</title>
+            </Head>
             <Profile
+              // @ts-ignore
               profileData={userData}
               isMine={false}
               addFriend={addFriend}
               unFriend={unFriend}
               moveToChatDetail={moveToChatDetail}
             />
-            <CustomTabs categoryKindOptions="profileCategory" />
+
+            <CustomTabs
+              categoryKindOptions="profileCategory"
+              onClickTab={() => null}
+            />
           </>
         )}
       </Box>
@@ -393,6 +412,7 @@ export default function ProfileDetailContainer() {
                   <PostItem
                     key={postItemData.id}
                     postItemData={postItemData}
+                    // @ts-ignore
                     toggleLikePost={toggleLikePost}
                   />
                 );

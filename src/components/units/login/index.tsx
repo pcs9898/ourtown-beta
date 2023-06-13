@@ -9,6 +9,7 @@ import { userState } from "@/src/commons/libraries/recoil/recoil";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Head from "next/head";
 
 export default function LoginConatinerPresenter() {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
@@ -101,11 +102,16 @@ export default function LoginConatinerPresenter() {
   };
 
   return (
-    <LoginSignupForm
-      isButtonLoading={isButtonLoading}
-      isSignup={false}
-      onSubmit={onSubmit}
-      handleGoole={signInWithGoogle}
-    />
+    <>
+      <Head>
+        <title>Log in | Ourtown</title>
+      </Head>
+      <LoginSignupForm
+        isButtonLoading={isButtonLoading}
+        isSignup={false}
+        onSubmit={onSubmit}
+        handleGoole={signInWithGoogle}
+      />
+    </>
   );
 }
