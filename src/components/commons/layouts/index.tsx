@@ -52,6 +52,8 @@ export default function Layouts({ children }: ILayoutsProps) {
             if (router.pathname === "/login" || router.pathname === "/signup")
               router.push("/");
             // setIsloading(false);
+
+            console.log(currentUser);
           } else {
             setCurrentUser(null);
           }

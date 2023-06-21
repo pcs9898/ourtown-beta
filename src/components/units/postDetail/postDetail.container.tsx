@@ -22,7 +22,14 @@ import PostDetailPresenter from "./postDetail.presenert";
 import CustomSkeleton from "../../commons/combine/customSkeleton";
 import Head from "next/head";
 
-export default function PostDetailContainer() {
+export default function PostDetailContainer({
+  postData,
+  userData,
+  commentsData,
+  ogTitle,
+  ogDescription,
+  ogImage,
+}) {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useRecoilState(userState);
   const setCurrentHeader = useSetRecoilState(headerState);
@@ -235,6 +242,9 @@ export default function PostDetailContainer() {
     <>
       <Head>
         <title>{data.postData.content.substring(0, 10)}</title>
+        <meta property="og:title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:image" content={ogImage} />
       </Head>
       <PostDetailPresenter
         postData={data?.postData}
@@ -245,4 +255,72 @@ export default function PostDetailContainer() {
       />
     </>
   ) : null;
+}
+
+export async function getServerSideProps({ params }) {
+  const postId = params.id;
+  try {
+    const postRef = doc(db, "posts", postId);
+    const postSnapshot = await getDoc(postRef);
+
+    if (postSnapshot.exists()) {
+      const postData = postSnapshot.data() as IPost;
+      postData.id = postSnapshot.id;
+
+      const userRef = doc(db, "users", postData.uid);
+      const userSnapshot = await getDoc(userRef);
+
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.data() as IUser;
+
+        const commentsData: IComment[] = [];
+        for (const commentId of postData.commentsId) {
+          const commentRef = doc(db, "comments", commentId);
+          const commentSnapshot = await getDoc(commentRef);
+
+          if (commentSnapshot.exists()) {
+            const commentData = commentSnapshot.data() as IComment;
+
+            // 사용자 정보 가져오기
+            const userUid = commentData.uid; // 댓글 작성자의 UID
+            const userRef = doc(db, "users", userUid);
+            const userSnapshot = await getDoc(userRef);
+
+            if (userSnapshot.exists()) {
+              const userData = userSnapshot.data() as IUser;
+              commentData.user = userData; // 유저 정보 추가
+              commentData.id = commentSnapshot.id;
+              commentsData.push(commentData);
+            } else {
+              throw new Error("User not found");
+            }
+          }
+        }
+
+        const ogTitle = `${userData.username}'s Post`;
+        const ogDescription = postData.content.substring(0, 10);
+        const ogImage = userData.avatarUrl; // og:image에 사용할 이미지 URL
+
+        return {
+          props: {
+            postData,
+            userData,
+            commentsData,
+            ogTitle,
+            ogDescription,
+            ogImage,
+          },
+        };
+      } else {
+        throw new Error("User not found");
+      }
+    } else {
+      throw new Error("Post not found");
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {},
+    };
+  }
 }

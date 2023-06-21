@@ -55,9 +55,6 @@ export default function HeaderLayout() {
   const isMe = pathname === "/me";
   const isProfile = pathname.includes("/profile");
 
-  const referrer = router.query.referrer;
-
-  console.log(referrer);
   const handleLogout = async () => {
     try {
       await auth.signOut().then(() => {
